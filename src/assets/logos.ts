@@ -14,12 +14,12 @@ export const logos = {
   zapier: "/logos/zapier 1.svg",
   zenBig: "/logos/ZEN_BIG 1.svg",
   
-  // Integration logos - Using reliable CDN URLs for better logos
-  amplitude: "https://img.icons8.com/color/96/amplitude.png",
+  // Integration logos - All using local files for consistency
+  amplitude: "/logos/amplitude.svg",
   googleAnalytics: "/logos/google-analytics-1 1.png",
   mixpanel: "/logos/Mixpanel.png",
   stripe: "/logos/Stripe.png",
-  twilio: "https://img.icons8.com/color/96/twilio.png",
+  twilio: "/logos/twilio.svg",
 } as const;
 
 export type LogoKey = keyof typeof logos;
