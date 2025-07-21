@@ -22,8 +22,33 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background-color: #ffffff;
+  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .adjustLetterSpacing {
   letter-spacing: -1px;
+}
+
+/* Global mobile improvements */
+* {
+  box-sizing: border-box;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Ensure all sections are properly contained on mobile */
+@media (max-width: 768px) {
+  .section-container {
+    padding: 0 16px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .section-container {
+    padding: 0 12px;
+  }
 }

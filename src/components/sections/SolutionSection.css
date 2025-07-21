@@ -338,9 +338,62 @@
   
   .integrations-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  
+  .integration-item {
+    padding: 12px;
+  }
+  
+  .integration-item img {
+    width: 32px;
+    height: 32px;
   }
   
   .section-description {
     margin-bottom: 60px;
+  }
+  
+  .section-title {
+    font-size: 24px;
+  }
+  
+  .section-subtitle {
+    font-size: 20px;
+  }
+}
+
+/* Additional mobile styles for very small screens */
+@media (max-width: 480px) {
+  .solution-section {
+    padding: 40px 12px;
+  }
+  
+  .integrations-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  
+  .integration-item {
+    padding: 8px;
+    min-height: 60px;
+  }
+  
+  .integration-item img {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .section-subtitle {
+    font-size: 18px;
+  }
+  
+  .section-description {
+    font-size: 13px;
+    margin-bottom: 40px;
   }
 }

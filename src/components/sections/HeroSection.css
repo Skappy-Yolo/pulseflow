@@ -253,6 +253,10 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .hero-section {
+    padding: 60px 16px;
+  }
+  
   .hero-container {
     grid-template-columns: 1fr;
     gap: 48px;
@@ -274,5 +278,50 @@
   
   .hero-buttons {
     justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .hero-buttons .btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+/* Additional mobile styles for very small screens */
+@media (max-width: 480px) {
+  .hero-section {
+    padding: 40px 12px;
+  }
+  
+  .hero-title {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+  
+  .hero-subtitle {
+    font-size: 14px;
+  }
+  
+  .hero-stats {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .stat-card {
+    padding: 16px;
+  }
+  
+  .metric-card {
+    padding: 12px;
+    min-height: auto;
+  }
+  
+  .metric-label {
+    font-size: 10px;
+  }
+  
+  .metric-value {
+    font-size: 16px;
   }
 }

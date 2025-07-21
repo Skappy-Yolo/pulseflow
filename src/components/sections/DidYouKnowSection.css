@@ -205,4 +205,52 @@
   .bottom-section {
     gap: 32px;
   }
+  
+  .section-title {
+    font-size: 24px;
+  }
+  
+  .stat-highlight {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+  
+  .content-text {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+  
+  .image-component {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* Additional mobile styles for very small screens */
+@media (max-width: 480px) {
+  .did-you-know-section {
+    padding: 40px 12px;
+  }
+  
+  .section-title {
+    font-size: 20px;
+  }
+  
+  .stat-highlight {
+    font-size: 16px;
+    padding: 12px 16px;
+  }
+  
+  .content-text {
+    font-size: 13px;
+  }
+  
+  .content-question {
+    font-size: 13px;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
 }
