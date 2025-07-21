@@ -14,12 +14,12 @@ export const logos = {
   zapier: "/logos/zapier 1.svg",
   zenBig: "/logos/ZEN_BIG 1.svg",
   
-  // Integration logos - Using inline SVG and reliable CDN URLs
-  amplitude: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTAwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTAgMjBDMTAgMTUgMTUgMTAgMjAgMTBTMzAgMTUgMzAgMjBTMjUgMzAgMjAgMzBTMTAgMjUgMTAgMjBaIiBmaWxsPSIjMDA1NUZGIi8+Cjx0ZXh0IHg9IjQwIiB5PSIyNSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMzMzIj5BbXBsaXR1ZGU8L3RleHQ+Cjwvc3ZnPg==",
+  // Integration logos - Using reliable CDN URLs for better logos
+  amplitude: "https://img.icons8.com/color/96/amplitude.png",
   googleAnalytics: "/logos/google-analytics-1 1.png",
   mixpanel: "/logos/Mixpanel.png",
   stripe: "/logos/Stripe.png",
-  twilio: "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTAwIDQwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8cGF0aCBkPSJNMTAgMjBDMTAgMTUgMTUgMTAgMjAgMTBTMzAgMTUgMzAgMjBTMjUgMzAgMjAgMzBTMTAgMjUgMTAgMjBaIiBmaWxsPSIjRjIyRjQ2Ii8+Cjx0ZXh0IHg9IjQwIiB5PSIyNSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjMzMzIj5Ud2lsaW88L3RleHQ+Cjwvc3ZnPg==",
+  twilio: "https://img.icons8.com/color/96/twilio.png",
 } as const;
 
 export type LogoKey = keyof typeof logos;
