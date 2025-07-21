@@ -15,11 +15,11 @@ export const logos = {
   zenBig: "/logos/ZEN_BIG 1.svg",
   
   // Integration logos - All using local files for consistency
-  amplitude: "/logos/amplitude.svg",
+  amplitude: "/logos/amplitude.png",
   googleAnalytics: "/logos/google-analytics-1 1.png",
   mixpanel: "/logos/Mixpanel.png",
   stripe: "/logos/Stripe.png",
-  twilio: "/logos/twilio.svg",
+  twilio: "/logos/twilio.png",
 } as const;
 
 export type LogoKey = keyof typeof logos;
