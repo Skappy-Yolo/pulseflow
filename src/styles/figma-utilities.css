@@ -1,0 +1,203 @@
+/* Figma-specific utility classes for exact measurements */
+
+/* Letter spacing adjustment as mentioned in your instructions */
+.adjustLetterSpacing {
+  letter-spacing: -1px;
+}
+
+/* Exact pixel measurements when Tailwind spacing doesn't match */
+.w-exact-375 { width: 375px; }
+.w-exact-1440 { width: 1440px; }
+.h-exact-80 { height: 80px; }
+.h-exact-120 { height: 120px; }
+.h-exact-640 { height: 640px; }
+
+/* Common Figma container sizes */
+.container-mobile { max-width: 375px; }
+.container-tablet { max-width: 768px; }
+.container-desktop { max-width: 1440px; }
+
+/* Exact spacing that might not exist in Tailwind */
+.gap-exact-6 { gap: 6px; }
+.gap-exact-14 { gap: 14px; }
+.gap-exact-18 { gap: 18px; }
+.gap-exact-22 { gap: 22px; }
+.gap-exact-36 { gap: 36px; }
+
+.p-exact-6 { padding: 6px; }
+.p-exact-14 { padding: 14px; }
+.p-exact-18 { padding: 18px; }
+.p-exact-22 { padding: 22px; }
+
+.m-exact-6 { margin: 6px; }
+.m-exact-14 { margin: 14px; }
+.m-exact-18 { margin: 18px; }
+.m-exact-22 { margin: 22px; }
+
+/* Exact font sizes from Figma */
+.text-exact-13 { font-size: 13px; line-height: 1.2; }
+.text-exact-15 { font-size: 15px; line-height: 1.3; }
+.text-exact-17 { font-size: 17px; line-height: 1.4; }
+.text-exact-19 { font-size: 19px; line-height: 1.4; }
+.text-exact-21 { font-size: 21px; line-height: 1.3; }
+.text-exact-28 { font-size: 28px; line-height: 1.2; }
+.text-exact-32 { font-size: 32px; line-height: 1.2; }
+.text-exact-40 { font-size: 40px; line-height: 1.1; }
+.text-exact-56 { font-size: 56px; line-height: 1.0; }
+
+/* Exact border radius values */
+.rounded-exact-6 { border-radius: 6px; }
+.rounded-exact-10 { border-radius: 10px; }
+.rounded-exact-14 { border-radius: 14px; }
+.rounded-exact-18 { border-radius: 18px; }
+.rounded-exact-20 { border-radius: 20px; }
+
+/* Custom shadows that match Figma exactly */
+.shadow-figma-sm {
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.1), 0px 1px 2px 0px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-figma-md {
+  box-shadow: 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.shadow-figma-lg {
+  box-shadow: 0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.shadow-figma-card {
+  box-shadow: 0px 8px 24px 0px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-figma-button {
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.06), 0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+}
+
+/* Gradient backgrounds from Figma */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, #005CE8 0%, #1361f5 100%);
+}
+
+.bg-gradient-success {
+  background: linear-gradient(135deg, #0FAF62 0%, #017737 100%);
+}
+
+/* Responsive utilities for Figma breakpoints */
+@media (max-width: 375px) {
+  .figma-mobile-hidden { display: none !important; }
+}
+
+@media (min-width: 376px) and (max-width: 768px) {
+  .figma-tablet-hidden { display: none !important; }
+}
+
+@media (min-width: 769px) {
+  .figma-desktop-hidden { display: none !important; }
+}
+
+/* Exact positioning for overlays and absolute elements */
+.absolute-figma-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.absolute-figma-top-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.absolute-figma-top-right {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.absolute-figma-bottom-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.absolute-figma-bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+/* Auto-layout utilities that match Figma's auto-layout */
+.figma-auto-layout-horizontal {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.figma-auto-layout-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+/* Image sizing utilities for exact Figma dimensions */
+.img-figma-icon-sm { width: 16px; height: 16px; }
+.img-figma-icon-md { width: 20px; height: 20px; }
+.img-figma-icon-lg { width: 24px; height: 24px; }
+.img-figma-icon-xl { width: 32px; height: 32px; }
+
+.img-figma-avatar-sm { width: 32px; height: 32px; border-radius: 50%; }
+.img-figma-avatar-md { width: 40px; height: 40px; border-radius: 50%; }
+.img-figma-avatar-lg { width: 48px; height: 48px; border-radius: 50%; }
+.img-figma-avatar-xl { width: 64px; height: 64px; border-radius: 50%; }
+
+/* Button variants that match Figma exactly */
+.btn-figma-primary {
+  background-color: #005CE8;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-figma-primary:hover {
+  background-color: #0049B8;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.06), 0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+}
+
+.btn-figma-secondary {
+  background-color: white;
+  color: #005CE8;
+  border: 1px solid #005CE8;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-figma-secondary:hover {
+  background-color: #EBF2FF;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.06), 0px 1px 2px 0px rgba(0, 0, 0, 0.04);
+}
+
+.btn-figma-ghost {
+  background-color: transparent;
+  color: #374151;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-figma-ghost:hover {
+  background-color: #F3F4F6;
+}
