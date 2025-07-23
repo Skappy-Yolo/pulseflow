@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Navigation from './components/sections/Navigation'
 import HeroSection from './components/sections/Hero'
 import DidYouKnowSection from './components/sections/DidYouKnowSection'
@@ -19,6 +19,26 @@ const LandingPage: React.FC = () => (
   </div>
 );
 
+// Wrapper components to handle navigation with React Router
+const LoginPageWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  return (
+    <LoginPage 
+      onNavigateToSignup={() => navigate('/signup')} 
+    />
+  );
+};
+
+const RegistrationPageWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  return (
+    <RegistrationPage 
+      onNavigateToLogin={() => navigate('/login')}
+      onNavigateToSuccess={() => navigate('/success')}
+    />
+  );
+};
+
 function App() {
   return (
     <Router>
@@ -28,23 +48,8 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           
           {/* Authentication Routes */}
-          <Route 
-            path="/login" 
-            element={
-              <LoginPage 
-                onNavigateToSignup={() => window.location.href = '/signup'} 
-              />
-            } 
-          />
-          <Route 
-            path="/signup" 
-            element={
-              <RegistrationPage 
-                onNavigateToLogin={() => window.location.href = '/login'}
-                onNavigateToSuccess={() => window.location.href = '/success'}
-              />
-            } 
-          />
+          <Route path="/login" element={<LoginPageWrapper />} />
+          <Route path="/signup" element={<RegistrationPageWrapper />} />
           <Route path="/success" element={<SuccessPage />} />
           
           {/* Redirect any unknown routes to landing page */}
