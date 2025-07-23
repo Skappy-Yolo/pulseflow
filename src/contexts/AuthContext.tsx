@@ -114,16 +114,27 @@ export const ProtectedRoute: React.FC<{
 }> = ({ children, requireSignup = false }) => {
   const { isAuthenticated, hasCompletedSignup } = useAuth();
   
+  // Debug logging (only in development)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('🔐 ProtectedRoute Check:', {
+      isAuthenticated,
+      hasCompletedSignup,
+      requireSignup,
+      willRedirect: (requireSignup && !hasCompletedSignup) || !isAuthenticated
+    });
+  }
+  
   if (requireSignup && !hasCompletedSignup) {
-    // Redirect to signup if they haven't completed signup
+    console.log('🚫 Redirecting to /signup: User has not completed signup');
     return <Navigate to="/signup" replace />;
   }
   
   if (!isAuthenticated) {
-    // Redirect to login if not authenticated
+    console.log('🚫 Redirecting to /login: User not authenticated');
     return <Navigate to="/login" replace />;
   }
   
+  console.log('✅ Access granted to protected route');
   return <>{children}</>;
 };
 

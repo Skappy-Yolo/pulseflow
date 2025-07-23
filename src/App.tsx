@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import Navigation from './components/sections/Navigation'
 import HeroSection from './components/sections/Hero'
@@ -7,6 +7,7 @@ import SolutionsSection from './components/sections/SolutionsSection'
 import TestimonialsCTAFooter from './components/sections/TestimonialsCTAFooter'
 import { LoginPage, RegistrationPage, SuccessPage } from './components/auth/PulseFlowAuth';
 import { AuthProvider, ProtectedRoute } from './contexts/AuthContext';
+import DebugPanel from './components/debug/DebugPanel';
 import './App.css'
 
 // Landing Page Component
@@ -41,6 +42,21 @@ const RegistrationPageWrapper: React.FC = () => {
 };
 
 function App() {
+  const [showDebug, setShowDebug] = useState(false);
+
+  // Add keyboard shortcut: Ctrl+Shift+D to toggle debug
+  React.useEffect(() => {
+    const handleKeyPress = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'D') {
+        e.preventDefault();
+        setShowDebug(prev => !prev);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, []);
+
   return (
     <AuthProvider>
       <Router>
@@ -66,6 +82,14 @@ function App() {
             {/* Redirect any unknown routes to landing page */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
+          
+          {/* Debug Panel - Only show in development */}
+          {process.env.NODE_ENV === 'development' && (
+            <DebugPanel 
+              isVisible={showDebug}
+              onToggle={() => setShowDebug(!showDebug)}
+            />
+          )}
         </div>
       </Router>
     </AuthProvider>
