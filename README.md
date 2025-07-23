@@ -1,15 +1,24 @@
-# PulseFlow Landing Page
+# PulseFlow Application
 
-A modern React TypeScript application built with Vite and Tailwind CSS for the PulseFlow SaaS landing page.
+A comprehensive React TypeScript application with landing page and authentication system, built with Vite and Tailwind CSS.
 
 ## 🚀 Features
 
+### Landing Page
 - **Modern Tech Stack**: React 18 + TypeScript + Vite
 - **Styling**: Tailwind CSS with custom design system
 - **Component Architecture**: Modular, reusable components
 - **Responsive Design**: Mobile-first responsive layout
 - **Performance**: Optimized with Vite's fast build tool
 - **Type Safety**: Full TypeScript support
+
+### Authentication System
+- **Complete Auth Flow**: Login, Registration, and Success pages
+- **Professional Forms**: Multi-step registration with role-based fields
+- **Email Validation**: Work domain checking and validation
+- **Responsive Design**: Optimized 40/60 layout split
+- **Brand Integration**: Blue branding and consistent styling
+- **Form Management**: React hooks with error handling
 
 ## 🛠️ Development
 
