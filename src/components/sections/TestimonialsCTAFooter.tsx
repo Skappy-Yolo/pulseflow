@@ -1,3 +1,5 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { images } from '../../assets/images';
 import './TestimonialsCTAFooter.css';
 
@@ -91,6 +93,8 @@ const SocialLink = ({ href, icon, label }: SocialLinkProps) => {
 
 // Reusable Footer Column Component
 const FooterColumn = ({ title, links }: FooterColumnProps) => {
+  const navigate = useNavigate();
+  
   return (
     <div className="footer-column">
       <h3 className="footer-column-title">{title}</h3>
@@ -100,7 +104,7 @@ const FooterColumn = ({ title, links }: FooterColumnProps) => {
             <Button 
               variant="primary" 
               className="footer-demo-btn"
-              onClick={() => console.log('Footer Book a Demo clicked')}
+              onClick={() => navigate('/signup')}
             >
               {link.text}
             </Button>
@@ -161,6 +165,8 @@ const TestimonialsSection = () => {
 
 // CTA Section Component
 const CTASection = () => {
+  const navigate = useNavigate();
+  
   return (
     <section className="cta-section">
       <div className="section-container">
@@ -173,7 +179,7 @@ const CTASection = () => {
         <div className="button-group">
           <Button 
             variant="primary"
-            onClick={() => console.log('Book a Demo clicked')}
+            onClick={() => navigate('/signup')}
           >
             Book a Demo
           </Button>

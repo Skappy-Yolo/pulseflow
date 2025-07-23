@@ -1,11 +1,14 @@
+import { useNavigate } from 'react-router-dom';
 import './Navbar.css';
 import { images } from '../../assets/images';
 
 const Navigation = () => {
+  const navigate = useNavigate();
+
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <a href="#" className="footer-logo">
+        <a href="/" className="footer-logo">
           <img
             src={images.heartbeatIcon}
             alt="PulseFlow Icon"
@@ -23,8 +26,18 @@ const Navigation = () => {
         </ul>
         
         <div className="nav-actions">
-          <a href="#" className="login-btn">Log in</a>
-          <a href="#" className="demo-btn">Book a Demo</a>
+          <button 
+            onClick={() => navigate('/login')} 
+            className="login-btn"
+          >
+            Log in
+          </button>
+          <button 
+            onClick={() => navigate('/signup')} 
+            className="demo-btn"
+          >
+            Book a Demo
+          </button>
         </div>
       </div>
     </nav>

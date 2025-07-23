@@ -1,3 +1,5 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './HeroSection.css';
 
 // TypeScript interfaces
@@ -5,6 +7,7 @@ interface ButtonProps {
   variant?: 'primary' | 'secondary';
   children: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 interface StatCardProps {
@@ -25,9 +28,12 @@ interface StatusBadgeProps {
 }
 
 // Reusable Button Component
-const Button = ({ variant = 'primary', children, className = '' }: ButtonProps) => {
+const Button = ({ variant = 'primary', children, className = '', onClick }: ButtonProps) => {
   return (
-    <button className={`btn ${variant === 'primary' ? 'btn-primary' : 'btn-secondary'} ${className}`}>
+    <button 
+      className={`btn ${variant === 'primary' ? 'btn-primary' : 'btn-secondary'} ${className}`}
+      onClick={onClick}
+    >
       {children}
     </button>
   );
@@ -85,6 +91,8 @@ const StatusBadge = ({ type, children }: StatusBadgeProps) => {
 };
 
 const HeroSection = () => {
+  const navigate = useNavigate();
+
   return (
     <section className="hero-section">
       <div className="hero-container">
@@ -103,7 +111,12 @@ const HeroSection = () => {
           </p>
 
           <div className="hero-buttons">
-            <Button variant="primary">Book Your Demo</Button>
+            <Button 
+              variant="primary" 
+              onClick={() => navigate('/signup')}
+            >
+              Book Your Demo
+            </Button>
             <Button variant="secondary">See How it Works</Button>
           </div>
 

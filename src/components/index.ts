@@ -6,6 +6,10 @@ export { StatCard } from './ui/StatCard'
 export { TestimonialCard } from './ui/TestimonialCard'
 export { default as Logo } from './ui/Logo';
 
+// Auth Components
+export { LoginPage, RegistrationPage, SuccessPage } from './auth/PulseFlowAuth';
+export { default as PulseFlowAuth } from './auth/PulseFlowAuth';
+
 // Section Components  
 export { default as Navigation } from './sections/Navigation';
 export { default as TestimonialsCTAFooter } from './sections/TestimonialsCTAFooter';
