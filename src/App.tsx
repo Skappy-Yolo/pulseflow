@@ -6,6 +6,7 @@ import DidYouKnowSection from './components/sections/DidYouKnowSection'
 import SolutionsSection from './components/sections/SolutionsSection'
 import TestimonialsCTAFooter from './components/sections/TestimonialsCTAFooter'
 import { LoginPage, RegistrationPage, SuccessPage } from './components/auth/PulseFlowAuth';
+import { AuthProvider, ProtectedRoute } from './contexts/AuthContext';
 import './App.css'
 
 // Landing Page Component
@@ -41,22 +42,33 @@ const RegistrationPageWrapper: React.FC = () => {
 
 function App() {
   return (
-    <Router>
-      <div className="App">
-        <Routes>
-          {/* Landing Page */}
-          <Route path="/" element={<LandingPage />} />
-          
-          {/* Authentication Routes */}
-          <Route path="/login" element={<LoginPageWrapper />} />
-          <Route path="/signup" element={<RegistrationPageWrapper />} />
-          <Route path="/success" element={<SuccessPage />} />
-          
-          {/* Redirect any unknown routes to landing page */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="App">
+          <Routes>
+            {/* Landing Page */}
+            <Route path="/" element={<LandingPage />} />
+            
+            {/* Authentication Routes */}
+            <Route path="/login" element={<LoginPageWrapper />} />
+            <Route path="/signup" element={<RegistrationPageWrapper />} />
+            
+            {/* Protected Success Page - Only accessible after signup */}
+            <Route 
+              path="/success" 
+              element={
+                <ProtectedRoute requireSignup={true}>
+                  <SuccessPage />
+                </ProtectedRoute>
+              } 
+            />
+            
+            {/* Redirect any unknown routes to landing page */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { images } from '../../assets/images';
+import { useAuth } from '../../contexts/AuthContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Types
 interface LoginFormData {
@@ -62,6 +64,7 @@ const PulseFlowLogo = () => {
 
 // Login Page Component - ORIGINAL DESIGN
 export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: ''
@@ -69,6 +72,7 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [emailError, setEmailError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (email: string) => {
     setFormData({...formData, email});
@@ -109,8 +113,24 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Login submitted:', formData);
-      // Handle successful login here
+      setIsLoading(true);
+      
+      // Simulate API call
+      setTimeout(() => {
+        console.log('Login submitted:', formData);
+        
+        // Authenticate user
+        login(formData.email);
+        
+        // Show success message
+        alert('Login successful! Redirecting to dashboard...');
+        
+        // In a real app, you'd redirect to dashboard
+        // For demo, redirect to landing page
+        window.location.href = '/';
+        
+        setIsLoading(false);
+      }, 1500);
     }
   };
 
@@ -217,14 +237,19 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
                 {/* Login Button */}
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white rounded-lg font-medium text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-colors"
+                  disabled={isLoading}
+                  className={`w-full rounded-lg font-medium text-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-colors ${
+                    isLoading 
+                      ? 'bg-blue-400 cursor-not-allowed' 
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  } text-white`}
                   style={{ 
                     paddingTop: '16px', 
                     paddingBottom: '16px', 
                     marginBottom: '24px' 
                   }}
                 >
-                  Login →
+                  {isLoading ? 'Signing In...' : 'Login →'}
                 </button>
 
                 {/* Divider */}
@@ -284,6 +309,7 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
 
 // Registration Page Component - ORIGINAL DESIGN
 export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: RegistrationPageProps) => {
+  const { signup } = useAuth();
   const [userType, setUserType] = useState<'consulting' | 'executive'>('executive');
   const [formData, setFormData] = useState<RegistrationFormData>({
     firstName: '',
@@ -299,6 +325,7 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
   const [emailError, setEmailError] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
   const [showOtherInput, setShowOtherInput] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (email: string) => {
     setFormData({...formData, workEmail: email});
@@ -334,8 +361,24 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log('Registration submitted:', { ...formData, userType });
-      onNavigateToSuccess();
+      setIsLoading(true);
+      
+      // Simulate API call
+      setTimeout(() => {
+        const userData = { 
+          ...formData, 
+          userType,
+          registrationTimestamp: new Date().toISOString()
+        };
+        
+        console.log('Registration submitted:', userData);
+        
+        // Register user in auth context
+        signup(userData);
+        
+        setIsLoading(false);
+        onNavigateToSuccess();
+      }, 1500); // Simulate network delay
     }
   };
 
@@ -690,14 +733,19 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
                 {/* Submit Button */}
                 <button
                   type="submit"
-                  className="w-full bg-blue-600 text-white rounded-lg font-medium text-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-colors"
+                  disabled={isLoading}
+                  className={`w-full rounded-lg font-medium text-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-colors ${
+                    isLoading 
+                      ? 'bg-blue-400 cursor-not-allowed' 
+                      : 'bg-blue-600 hover:bg-blue-700'
+                  } text-white`}
                   style={{ 
                     paddingTop: '16px', 
                     paddingBottom: '16px', 
                     marginBottom: '24px' 
                   }}
                 >
-                  Book A Demo →
+                  {isLoading ? 'Creating Account...' : 'Book A Demo →'}
                 </button>
 
                 {/* Divider */}
