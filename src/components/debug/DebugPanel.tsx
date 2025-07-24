@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import AdminDashboard from '../admin/AdminDashboard';
 
 interface DebugPanelProps {
   isVisible: boolean;
@@ -7,8 +8,9 @@ interface DebugPanelProps {
 }
 
 export const DebugPanel: React.FC<DebugPanelProps> = ({ isVisible, onToggle }) => {
-  const { isAuthenticated, hasCompletedSignup, userEmail, userInfo, logout } = useAuth();
+  const { isAuthenticated, hasCompletedSignup, userEmail, logout } = useAuth();
   const [showDetails, setShowDetails] = useState(false);
+  const [showAdmin, setShowAdmin] = useState(false);
 
   const clearLocalStorage = () => {
     localStorage.removeItem('pulseflow_auth');
@@ -163,6 +165,21 @@ export const DebugPanel: React.FC<DebugPanelProps> = ({ isVisible, onToggle }) =
           • Check console for auth errors
         </div>
       </div>
+
+      {/* Admin Access */}
+      <div className="mt-3 border-t pt-3">
+        <button
+          onClick={() => setShowAdmin(true)}
+          className="w-full bg-indigo-600 text-white px-3 py-2 rounded text-xs font-medium hover:bg-indigo-700"
+        >
+          👑 Admin Dashboard
+        </button>
+      </div>
+
+      {/* Admin Dashboard Modal */}
+      {showAdmin && (
+        <AdminDashboard onClose={() => setShowAdmin(false)} />
+      )}
     </div>
   );
 };

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { images } from '../../assets/images';
 import { useAuth } from '../../contexts/AuthContext';
-import { useAuth } from '../../contexts/AuthContext';
 
 // Types
 interface LoginFormData {
@@ -115,22 +114,21 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
     if (validateForm()) {
       setIsLoading(true);
       
-      // Simulate API call
-      setTimeout(() => {
-        console.log('Login submitted:', formData);
-        
-        // Authenticate user
-        login(formData.email);
-        
-        // Show success message
-        alert('Login successful! Redirecting to dashboard...');
-        
-        // In a real app, you'd redirect to dashboard
-        // For demo, redirect to landing page
-        window.location.href = '/';
-        
-        setIsLoading(false);
-      }, 1500);
+      login(formData.email)
+        .then(({ success, error }) => {
+          setIsLoading(false);
+          if (success) {
+            console.log('✅ Login successful');
+            // Navigation will be handled by AuthContext automatically
+          } else {
+            setErrors({ general: error || 'Login failed' });
+          }
+        })
+        .catch(error => {
+          setIsLoading(false);
+          setErrors({ general: 'An unexpected error occurred' });
+          console.error('Login error:', error);
+        });
     }
   };
 
@@ -363,22 +361,27 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
     if (validateForm()) {
       setIsLoading(true);
       
-      // Simulate API call
-      setTimeout(() => {
-        const userData = { 
-          ...formData, 
-          userType,
-          registrationTimestamp: new Date().toISOString()
-        };
-        
-        console.log('Registration submitted:', userData);
-        
-        // Register user in auth context
-        signup(userData);
-        
-        setIsLoading(false);
-        onNavigateToSuccess();
-      }, 1500); // Simulate network delay
+      const userData = { 
+        ...formData, 
+        userType,
+        registrationTimestamp: new Date().toISOString()
+      };
+      
+      signup(userData)
+        .then(({ success, error }) => {
+          setIsLoading(false);
+          if (success) {
+            console.log('✅ Registration successful');
+            onNavigateToSuccess();
+          } else {
+            setErrors({ general: error || 'Registration failed' });
+          }
+        })
+        .catch(error => {
+          setIsLoading(false);
+          setErrors({ general: 'An unexpected error occurred' });
+          console.error('Registration error:', error);
+        });
     }
   };
 

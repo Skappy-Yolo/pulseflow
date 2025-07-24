@@ -108,6 +108,10 @@ const FooterColumn = ({ title, links }: FooterColumnProps) => {
             >
               {link.text}
             </Button>
+          ) : link.text === 'Contact us' ? (
+            <a href="mailto:hello@pulseflow.com" className="footer-link">
+              {link.text}
+            </a>
           ) : (
             <a href={link.href} className="footer-link">
               {link.text}
@@ -273,9 +277,18 @@ const Footer = () => {
           </div>
 
           {/* Footer Columns */}
-          <FooterColumn title="For Teams" links={footerLinks.forTeams} />
-          <FooterColumn title="Company" links={footerLinks.company} />
-          <FooterColumn title="Resources" links={footerLinks.resources} />
+          <FooterColumn 
+            title="For Teams" 
+            links={footerLinks.forTeams}
+          />
+          <FooterColumn 
+            title="Company" 
+            links={footerLinks.company}
+          />
+          <FooterColumn 
+            title="Resources" 
+            links={footerLinks.resources}
+          />
         </div>
 
         <div className="footer-bottom">

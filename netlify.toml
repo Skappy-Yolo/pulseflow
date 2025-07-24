@@ -1,0 +1,23 @@
+# Netlify configuration
+[build]
+  publish = "dist"
+  command = "npm run build"
+
+# Form handling
+[[forms]]
+  name = "pulseflow-contact"
+
+# SPA routing (already exists in _redirects, but adding here for completeness)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
