@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { images } from '../../assets/images';
 import { useAuth } from '../../contexts/AuthContext';
+import './AuthStyles.css';
 
 // Types
 interface LoginFormData {
@@ -133,101 +134,86 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-7xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="flex min-h-[700px]">
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-layout">
           {/* Left Side - Green Background with Image */}
-          <div className="w-2/5 flex items-center justify-center p-8" style={{ background: 'linear-gradient(to bottom right, #0f3e23, #2d6e4f)' }}>
+          <div className="auth-image-panel">
             <img
               src="/images/auth/hero-analytics.jpg"
               alt="PulseFlow Analytics Dashboard"
-              className="w-full max-w-sm h-auto object-contain rounded-lg"
-              style={{ 
-                filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.2))'
-              }}
+              className="auth-hero-image"
             />
           </div>
 
           {/* Right Side - Login Form */}
-          <div className="w-3/5 flex items-center justify-center p-8">
-            <div className="w-full max-w-lg" style={{ paddingTop: '24px', paddingBottom: '24px' }}>
+          <div className="auth-form-panel">
+            <div className="auth-form-container">
               {/* Logo */}
-              <div className="flex items-center justify-center" style={{ marginTop: '16px', marginBottom: '32px' }}>
+              <div className="auth-logo-container">
                 <PulseFlowLogo />
               </div>
 
               {/* Form */}
               <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="text-center" style={{ marginBottom: '32px' }}>
-                  <h1 className="text-3xl font-semibold text-gray-900 mb-4">Login to your account</h1>
+                <div className="auth-title-container">
+                  <h1 className="auth-title">Login to your account</h1>
                 </div>
 
                 {/* Email */}
-                <div style={{ marginBottom: '32px' }}>
-                  <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>Email</label>
+                <div className="auth-field-container">
+                  <label className="auth-label">Email</label>
                   <input
                     type="email"
                     value={formData.email}
                     onChange={(e) => handleEmailChange(e.target.value)}
-                    className={`w-full text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent ${
-                      errors.email || emailError ? 'border-red-500' : 'border-gray-300'
+                    className={`auth-input ${
+                      errors.email || emailError ? 'auth-input-error' : ''
                     }`}
-                    style={{ 
-                      paddingLeft: '24px', 
-                      paddingRight: '24px', 
-                      paddingTop: '16px', 
-                      paddingBottom: '16px' 
-                    }}
                     placeholder="name@company.com"
                   />
                   {(errors.email || emailError) && (
-                    <p className="text-sm text-red-600" style={{ marginTop: '8px' }}>{errors.email || emailError}</p>
+                    <p className="auth-error-message">{errors.email || emailError}</p>
                   )}
                 </div>
 
                 {/* Password */}
-                <div style={{ marginBottom: '32px' }}>
-                  <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>Password</label>
+                <div className="auth-field-container">
+                  <label className="auth-label">Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={formData.password}
                       onChange={(e) => setFormData({...formData, password: e.target.value})}
-                      className={`w-full text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent ${
-                        errors.password ? 'border-red-500' : 'border-gray-300'
+                      className={`auth-input auth-password-input ${
+                        errors.password ? 'auth-input-error' : ''
                       }`}
-                      style={{ 
-                        paddingLeft: '24px', 
-                        paddingRight: '48px', 
-                        paddingTop: '16px', 
-                        paddingBottom: '16px' 
-                      }}
                       placeholder="Password"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
+                      className="auth-password-toggle"
                       tabIndex={-1}
                     >
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
                   {errors.password && (
-                    <p className="text-sm text-red-600" style={{ marginTop: '8px' }}>{errors.password}</p>
+                    <p className="auth-error-message">{errors.password}</p>
                   )}
                 </div>
 
                 {/* Remember Me & Forgot Password */}
-                <div className="flex items-center justify-between py-2" style={{ marginBottom: '32px' }}>
-                  <label className="flex items-center">
+                <div className="auth-remember-container">
+                  <label className="auth-checkbox-label">
                     <input 
                       type="checkbox" 
-                      className="w-4 h-4 text-blue-600 border-2 border-gray-300 rounded focus:ring-blue-500 focus:ring-2" 
+                      className="auth-checkbox" 
                     />
-                    <span className="text-sm text-gray-600" style={{ marginLeft: '12px' }}>Remember me</span>
+                    <span className="auth-checkbox-text">Remember me</span>
                   </label>
-                  <a href="#" className="text-sm text-blue-600 hover:underline">
+                  <a href="#" className="auth-forgot-link">
                     Forgot password?
                   </a>
                 </div>
@@ -236,62 +222,53 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full rounded-lg font-medium text-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-colors ${
-                    isLoading 
-                      ? 'bg-blue-400 cursor-not-allowed' 
-                      : 'bg-blue-600 hover:bg-blue-700'
-                  } text-white`}
-                  style={{ 
-                    paddingTop: '16px', 
-                    paddingBottom: '16px', 
-                    marginBottom: '24px' 
-                  }}
+                  className={`auth-submit-button ${
+                    isLoading ? 'auth-submit-button-loading' : ''
+                  }`}
                 >
                   {isLoading ? 'Signing In...' : 'Login →'}
                 </button>
 
                 {/* Divider */}
-                <div className="flex items-center" style={{ marginTop: '24px', marginBottom: '32px' }}>
-                  <div className="flex-1 border-t border-gray-300"></div>
-                  <span className="text-base text-gray-500" style={{ paddingLeft: '24px', paddingRight: '24px' }}>OR LOGIN WITH</span>
-                  <div className="flex-1 border-t border-gray-300"></div>
+                <div className="auth-divider">
+                  <div className="auth-divider-line"></div>
+                  <span className="auth-divider-text">OR LOGIN WITH</span>
+                  <div className="auth-divider-line"></div>
                 </div>
 
                 {/* Social Login */}
-                <div className="grid grid-cols-2 gap-4" style={{ marginBottom: '32px' }}>
+                <div className="auth-social-container">
                   <button
                     type="button"
-                    className="flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-base"
-                    style={{ paddingTop: '16px', paddingBottom: '16px', paddingLeft: '16px', paddingRight: '16px' }}
+                    className="auth-social-button"
                   >
                     <img 
                       src="/logos/Slack_icon_2019 1.svg" 
                       alt="Slack" 
-                      className="w-5 h-5"
+                      className="auth-social-icon"
                     />
-                    <span style={{ marginLeft: '12px' }}>Slack</span>
+                    <span className="auth-social-text">Slack</span>
                   </button>
                   <button
                     type="button"
-                    className="flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-base"
-                    style={{ paddingTop: '16px', paddingBottom: '16px', paddingLeft: '16px', paddingRight: '16px' }}
+                    className="auth-social-button"
                   >
                     <img 
                       src="/logos/microsoft.png" 
                       alt="Microsoft" 
-                      className="w-5 h-5"
+                      className="auth-social-icon"
                     />
-                    <span style={{ marginLeft: '12px' }}>Microsoft</span>
+                    <span className="auth-social-text">Microsoft</span>
                   </button>
                 </div>
 
                 {/* Sign up link */}
-                <div className="text-center" style={{ marginTop: '40px' }}>
-                  <span className="text-base text-gray-600">New to PulseFlow? </span>
+                <div className="auth-signup-link-container">
+                  <span className="auth-signup-text">New to PulseFlow? </span>
                   <button 
                     type="button"
                     onClick={onNavigateToSignup}
-                    className="text-base text-blue-600 hover:underline font-medium cursor-pointer bg-none border-none"
+                    className="auth-signup-link"
                   >
                     Try for free
                   </button>
@@ -451,187 +428,152 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-7xl bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="flex min-h-[800px]">
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-layout">
           {/* Left Side - Green Background with Image */}
-          <div className="w-2/5 flex items-center justify-center p-8" style={{ background: 'linear-gradient(to bottom right, #0f3e23, #2d6e4f)' }}>
+          <div className="auth-image-panel auth-image-panel-green">
             <img
               src="/images/auth/hero-analytics.jpg"
               alt="PulseFlow Registration"
-              className="w-full max-w-sm h-auto object-contain rounded-lg"
-              style={{ 
-                filter: 'drop-shadow(0 10px 30px rgba(0,0,0,0.2))'
-              }}
+              className="auth-hero-image auth-hero-image-registration"
             />
           </div>
 
           {/* Right Side - Registration Form */}
-          <div className="w-3/5 flex items-center justify-center p-8">
-            <div className="w-full max-w-lg max-h-[700px] overflow-y-auto" style={{ paddingRight: '24px', marginRight: '8px' }}>
+          <div className="auth-form-panel">
+            <div className="auth-form-container auth-form-scrollable">
               {/* Logo */}
-              <div className="flex items-center justify-center" style={{ marginBottom: '32px' }}>
+              <div className="auth-logo-container">
                 <PulseFlowLogo />
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-8" style={{ padding: '8px' }}>
-                <div className="text-center" style={{ marginBottom: '32px' }}>
-                  <h1 className="text-2xl font-semibold text-gray-900 mb-3">Welcome to PulseFlow</h1>
-                  <p className="text-base text-gray-600">Tell us about your needs and we'll get you started</p>
+              <form onSubmit={handleSubmit} className="auth-form">
+                <div className="auth-title-container">
+                  <h1 className="auth-title">Welcome to PulseFlow</h1>
+                  <p className="auth-subtitle">Tell us about your needs and we'll get you started</p>
                 </div>
 
                 {/* Name Fields */}
-                <div className="grid grid-cols-2 gap-4" style={{ marginBottom: '32px' }}>
+                <div className="auth-name-fields">
                   <div>
-                    <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
-                      First Name <span className="text-red-500">*</span>
+                    <label className="auth-label">
+                      First Name <span className="auth-required">*</span>
                     </label>
                     <input
                       type="text"
                       value={formData.firstName}
                       onChange={(e) => setFormData({...formData, firstName: e.target.value})}
-                      className={`w-full text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent ${
-                        errors.firstName ? 'border-red-500' : 'border-gray-300'
+                      className={`auth-input ${
+                        errors.firstName ? 'auth-input-error' : ''
                       }`}
-                      style={{ 
-                        paddingLeft: '24px', 
-                        paddingRight: '24px', 
-                        paddingTop: '16px', 
-                        paddingBottom: '16px' 
-                      }}
                       placeholder="John"
                       required
                     />
                     {errors.firstName && (
-                      <p className="text-sm text-red-600" style={{ marginTop: '8px' }}>{errors.firstName}</p>
+                      <p className="auth-error-message">{errors.firstName}</p>
                     )}
                   </div>
                   <div>
-                    <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
-                      Last Name <span className="text-red-500">*</span>
+                    <label className="auth-label">
+                      Last Name <span className="auth-required">*</span>
                     </label>
                     <input
                       type="text"
                       value={formData.lastName}
                       onChange={(e) => setFormData({...formData, lastName: e.target.value})}
-                      className={`w-full text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent ${
-                        errors.lastName ? 'border-red-500' : 'border-gray-300'
+                      className={`auth-input ${
+                        errors.lastName ? 'auth-input-error' : ''
                       }`}
-                      style={{ 
-                        paddingLeft: '24px', 
-                        paddingRight: '24px', 
-                        paddingTop: '16px', 
-                        paddingBottom: '16px' 
-                      }}
                       placeholder="Doe"
                       required
                     />
                     {errors.lastName && (
-                      <p className="text-sm text-red-600" style={{ marginTop: '8px' }}>{errors.lastName}</p>
+                      <p className="auth-error-message">{errors.lastName}</p>
                     )}
                   </div>
                 </div>
 
                 {/* Work Email */}
-                <div style={{ marginBottom: '32px' }}>
-                  <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
-                    Work Email <span className="text-red-500">*</span>
+                <div className="auth-field-container">
+                  <label className="auth-label">
+                    Work Email <span className="auth-required">*</span>
                   </label>
                   <input
                     type="email"
                     value={formData.workEmail}
                     onChange={(e) => handleEmailChange(e.target.value)}
-                    className={`w-full text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent ${
-                      errors.workEmail || emailError ? 'border-red-500' : 'border-gray-300'
+                    className={`auth-input ${
+                      errors.workEmail || emailError ? 'auth-input-error' : ''
                     }`}
-                    style={{ 
-                      paddingLeft: '24px', 
-                      paddingRight: '24px', 
-                      paddingTop: '16px', 
-                      paddingBottom: '16px' 
-                    }}
                     placeholder="john.doe@company.com"
                     required
                   />
                   {(errors.workEmail || emailError) && (
-                    <p className="text-sm text-red-600" style={{ marginTop: '8px' }}>{errors.workEmail || emailError}</p>
+                    <p className="auth-error-message">{errors.workEmail || emailError}</p>
                   )}
                 </div>
 
                 {/* Company */}
-                <div style={{ marginBottom: '32px' }}>
-                  <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
-                    Company <span className="text-red-500">*</span>
+                <div className="auth-field-container">
+                  <label className="auth-label">
+                    Company <span className="auth-required">*</span>
                   </label>
                   <input
                     type="text"
                     value={formData.company}
                     onChange={(e) => setFormData({...formData, company: e.target.value})}
-                    className={`w-full text-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent ${
-                      errors.company ? 'border-red-500' : 'border-gray-300'
+                    className={`auth-input ${
+                      errors.company ? 'auth-input-error' : ''
                     }`}
-                    style={{ 
-                      paddingLeft: '24px', 
-                      paddingRight: '24px', 
-                      paddingTop: '16px', 
-                      paddingBottom: '16px' 
-                    }}
                     placeholder="Ink Consulting Group"
                     required
                   />
                   {errors.company && (
-                    <p className="text-sm text-red-600" style={{ marginTop: '8px' }}>{errors.company}</p>
+                    <p className="auth-error-message">{errors.company}</p>
                   )}
                 </div>
 
                 {/* User Type Selection */}
-                <div style={{ marginBottom: '32px' }}>
-                  <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
-                    I am a... <span className="text-red-500">*</span>
+                <div className="auth-field-container">
+                  <label className="auth-label">
+                    I am a... <span className="auth-required">*</span>
                   </label>
-                  <div className="flex flex-col space-y-3">
-                    <label className="flex items-center">
+                  <div className="auth-radio-group">
+                    <label className="auth-radio-label">
                       <input
                         type="radio"
                         name="userType"
                         value="consulting"
                         checked={userType === 'consulting'}
                         onChange={(e) => setUserType(e.target.value as 'consulting' | 'executive')}
-                        className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                        style={{ marginRight: '12px' }}
+                        className="auth-radio"
                       />
-                      <span className="text-base">Consulting Team</span>
+                      <span className="auth-radio-text">Consulting Team</span>
                     </label>
-                    <label className="flex items-center">
+                    <label className="auth-radio-label">
                       <input
                         type="radio"
                         name="userType"
                         value="executive"
                         checked={userType === 'executive'}
                         onChange={(e) => setUserType(e.target.value as 'consulting' | 'executive')}
-                        className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                        style={{ marginRight: '12px' }}
+                        className="auth-radio"
                       />
-                      <span className="text-base">Company Executive</span>
+                      <span className="auth-radio-text">Company Executive</span>
                     </label>
                   </div>
                 </div>
 
                 {/* Organization Type */}
-                <div style={{ marginBottom: '32px' }}>
-                  <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
+                <div className="auth-field-container">
+                  <label className="auth-label">
                     Which best describes your organization?
                   </label>
                   <select 
                     value={formData.organizationType}
                     onChange={(e) => setFormData({...formData, organizationType: e.target.value})}
-                    className="w-full text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                    style={{ 
-                      paddingLeft: '24px', 
-                      paddingRight: '24px', 
-                      paddingTop: '16px', 
-                      paddingBottom: '16px' 
-                    }}
+                    className="auth-select"
                   >
                     <option value="">Select your organization type</option>
                     {getOrganizationOptions().map((option, index) => (
@@ -641,21 +583,15 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
                 </div>
 
                 {/* Dynamic Fields Based on User Type */}
-                <div className="grid grid-cols-2 gap-4" style={{ marginBottom: '32px' }}>
+                <div className="auth-name-fields">
                   <div>
-                    <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
+                    <label className="auth-label">
                       {userType === 'consulting' ? 'Number of Clients' : 'Team Size'}
                     </label>
                     <select 
                       value={formData.teamSizeOrClients}
                       onChange={(e) => setFormData({...formData, teamSizeOrClients: e.target.value})}
-                      className="w-full text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                      style={{ 
-                        paddingLeft: '24px', 
-                        paddingRight: '24px', 
-                        paddingTop: '16px', 
-                        paddingBottom: '16px' 
-                      }}
+                      className="auth-select"
                     >
                       <option value="">Select</option>
                       {userType === 'consulting' 
@@ -669,19 +605,13 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
                     </select>
                   </div>
                   <div>
-                    <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
+                    <label className="auth-label">
                       What's your primary role?
                     </label>
                     <select 
                       value={formData.primaryRole}
                       onChange={(e) => setFormData({...formData, primaryRole: e.target.value})}
-                      className="w-full text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                      style={{ 
-                        paddingLeft: '24px', 
-                        paddingRight: '24px', 
-                        paddingTop: '16px', 
-                        paddingBottom: '16px' 
-                      }}
+                      className="auth-select"
                     >
                       <option value="">Select your role</option>
                       {getRoleOptions().map((option, index) => (
@@ -692,20 +622,14 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
                 </div>
 
                 {/* Main Challenge */}
-                <div style={{ marginBottom: '32px' }}>
-                  <label className="block text-base font-medium text-gray-700" style={{ marginBottom: '12px' }}>
+                <div className="auth-field-container">
+                  <label className="auth-label">
                     What is your main challenge?
                   </label>
                   <select 
                     value={formData.mainChallenge}
                     onChange={(e) => handleChallengeChange(e.target.value)}
-                    className="w-full text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                    style={{ 
-                      paddingLeft: '24px', 
-                      paddingRight: '24px', 
-                      paddingTop: '16px', 
-                      paddingBottom: '16px' 
-                    }}
+                    className="auth-select"
                   >
                     <option value="">Select all that applies</option>
                     {getChallengeOptions().map((option, index) => (
@@ -716,18 +640,12 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
 
                 {/* Other Challenge Input */}
                 {showOtherInput && (
-                  <div style={{ marginBottom: '32px' }}>
+                  <div className="auth-field-container">
                     <input
                       type="text"
                       value={formData.otherChallenge}
                       onChange={(e) => setFormData({...formData, otherChallenge: e.target.value})}
-                      className="w-full text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                      style={{ 
-                        paddingLeft: '24px', 
-                        paddingRight: '24px', 
-                        paddingTop: '16px', 
-                        paddingBottom: '16px' 
-                      }}
+                      className="auth-input"
                       placeholder="Please specify"
                     />
                   </div>
@@ -737,62 +655,53 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`w-full rounded-lg font-medium text-lg focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 transition-colors ${
-                    isLoading 
-                      ? 'bg-blue-400 cursor-not-allowed' 
-                      : 'bg-blue-600 hover:bg-blue-700'
-                  } text-white`}
-                  style={{ 
-                    paddingTop: '16px', 
-                    paddingBottom: '16px', 
-                    marginBottom: '24px' 
-                  }}
+                  className={`auth-submit-button ${
+                    isLoading ? 'auth-submit-button-loading' : ''
+                  }`}
                 >
                   {isLoading ? 'Creating Account...' : 'Book A Demo →'}
                 </button>
 
                 {/* Divider */}
-                <div className="flex items-center" style={{ marginTop: '24px', marginBottom: '32px' }}>
-                  <div className="flex-1 border-t border-gray-300"></div>
-                  <span className="text-base text-gray-500" style={{ paddingLeft: '24px', paddingRight: '24px' }}>OR SIGN UP WITH</span>
-                  <div className="flex-1 border-t border-gray-300"></div>
+                <div className="auth-divider">
+                  <div className="auth-divider-line"></div>
+                  <span className="auth-divider-text">OR SIGN UP WITH</span>
+                  <div className="auth-divider-line"></div>
                 </div>
 
                 {/* Social Registration */}
-                <div className="grid grid-cols-2 gap-4" style={{ marginBottom: '32px' }}>
+                <div className="auth-social-container">
                   <button
                     type="button"
-                    className="flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-base"
-                    style={{ paddingTop: '16px', paddingBottom: '16px', paddingLeft: '16px', paddingRight: '16px' }}
+                    className="auth-social-button"
                   >
                     <img 
                       src="/logos/Slack_icon_2019 1.svg" 
                       alt="Slack" 
-                      className="w-5 h-5"
+                      className="auth-social-icon"
                     />
-                    <span style={{ marginLeft: '12px' }}>Slack</span>
+                    <span className="auth-social-text">Slack</span>
                   </button>
                   <button
                     type="button"
-                    className="flex items-center justify-center border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-base"
-                    style={{ paddingTop: '16px', paddingBottom: '16px', paddingLeft: '16px', paddingRight: '16px' }}
+                    className="auth-social-button"
                   >
                     <img 
                       src="/logos/microsoft.png" 
                       alt="Microsoft" 
-                      className="w-5 h-5"
+                      className="auth-social-icon"
                     />
-                    <span style={{ marginLeft: '12px' }}>Microsoft</span>
+                    <span className="auth-social-text">Microsoft</span>
                   </button>
                 </div>
 
                 {/* Login link */}
-                <div className="text-center" style={{ marginTop: '40px' }}>
-                  <span className="text-base text-gray-600">Already have an account? </span>
+                <div className="auth-signup-link-container">
+                  <span className="auth-signup-text">Already have an account? </span>
                   <button 
                     type="button"
                     onClick={onNavigateToLogin}
-                    className="text-base text-blue-600 hover:underline font-medium cursor-pointer bg-none border-none"
+                    className="auth-signup-link"
                   >
                     Log In
                   </button>
