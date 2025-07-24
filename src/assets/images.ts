@@ -1,25 +1,25 @@
 // Image assets - Production ready paths
 export const images = {
-  // Profile images - using existing placeholder SVGs
-  image21: "/images/profile1.svg",
-  image23: "/images/profile1.svg", 
-  profile1: "/images/profile1.svg",
-  profile2: "/images/profile1.svg",
-  profile3: "/images/profile1.svg",
-  profile4: "/images/profile1.svg",
+  // Profile images - using uploaded profile pictures
+  image21: "/images/profiles/Bunqqi.png",
+  image23: "/images/profiles/ENIES.png", 
+  profile1: "/images/profiles/Bunqqi.png",
+  profile2: "/images/profiles/ENIES.png",
+  profile3: "/images/profiles/Nolum.png",
+  profile4: "/images/profiles/Bunqqi.png",
   
-  // Content images - using existing placeholder SVGs  
-  image19: "/images/dashboard.svg",
-  image20: "/images/analytics.svg",
-  image9: "/images/dashboard.svg",
-  image10: "/images/analytics.svg",
-  image11: "/images/dashboard.svg",
+  // Content images - using uploaded "Did you know" images
+  image19: "/images/Did you know 1.jpg",
+  image20: "/images/Did you know 2.jpg",
+  image9: "/images/Did you know 1.jpg",
+  image10: "/images/Did you know 2.jpg",
+  image11: "/images/Did you know 1.jpg",
   
   // SVG assets - MAIN PULSEFLOW LOGO (the real one!)
-  heartbeatIcon: "/logos/Group 1329.svg", // This is the correct PulseFlow logo
-  rectangle333: "/logos/Group 1329.svg",
-  vector29: "/logos/Group 1329.svg", 
-  vector28: "/logos/Group 1329.svg",
+  heartbeatIcon: "/images/Heartbeat.svg", // This is the correct PulseFlow logo
+  rectangle333: "/images/Heartbeat.svg",
+  vector29: "/images/Heartbeat.svg", 
+  vector28: "/images/Heartbeat.svg",
   
   // Integration logos - these are the real integration logos
   hubspot: "/logos/hubspot-1 2.svg",
@@ -36,8 +36,8 @@ export const images = {
   microsoft: "/logos/microsoft.png",
   
   // For now these are placeholder until we restore the original images
-  layer: "/images/dashboard.svg", // Temporary placeholder
-  group1: "/images/analytics.svg", // Temporary placeholder
+  layer: "/images/Did you know 1.jpg", // Using uploaded image
+  group1: "/images/Did you know 2.jpg", // Using uploaded image
   
   // UI elements - using placeholder paths for now
   checkCircle: "/images/profile1.svg", // Temporary placeholder
