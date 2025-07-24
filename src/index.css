@@ -45,11 +45,42 @@ h1, h2, h3, h4, h5, h6 {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Ensure all sections are properly contained on mobile */
+/* Ensure all sections are properly contained and centered on mobile */
 @media (max-width: 768px) {
+  body {
+    text-align: center; /* Center align all text by default on mobile */
+  }
+  
   .section-container {
-    padding: 0 16px;
     max-width: 100%;
+    padding: 0 1rem;
+    margin: 0 auto;
+    text-align: center; /* Ensure sections are centered */
+  }
+  
+  /* Center align all major content containers */
+  .container, .max-w-7xl, .max-w-6xl, .max-w-5xl {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Ensure navigation text wraps properly */
+  .nav-link, .nav-button {
+    white-space: nowrap;
+    font-size: 14px !important;
+  }
+  
+  /* Better mobile typography */
+  h1, h2, h3 {
+    text-align: center;
+    word-wrap: break-word;
+    hyphens: auto;
+  }
+  
+  p, .text-base, .text-lg {
+    text-align: center;
+    line-height: 1.6;
   }
   
   /* Better button touch targets */
@@ -72,14 +103,29 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 480px) {
+  body {
+    font-size: 14px; /* Slightly smaller base font on very small screens */
+  }
+  
   .section-container {
     padding: 0 12px;
   }
   
-  /* Smaller spacing on very small screens */
+  /* Even smaller spacing on very small screens */
   section {
     padding-top: 32px;
     padding-bottom: 32px;
+  }
+  
+  /* Ensure text doesn't break awkwardly */
+  h1 {
+    font-size: 24px !important;
+    line-height: 1.3;
+  }
+  
+  h2 {
+    font-size: 20px !important;
+    line-height: 1.4;
   }
   
   /* Ensure text is readable */

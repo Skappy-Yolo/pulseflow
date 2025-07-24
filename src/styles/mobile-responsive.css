@@ -346,3 +346,84 @@
     border-width: 2px;
   }
 }
+
+/* ==========================================================================
+   Mobile Text Alignment Fixes
+   ========================================================================== */
+
+/* Global mobile content centering */
+@media (max-width: 768px) {
+  /* Ensure all content is properly centered on mobile */
+  .hero-content,
+  .section-content,
+  .landing-content,
+  .main-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  
+  /* Fix text justification issues */
+  h1, h2, h3, h4, h5, h6 {
+    text-align: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  p {
+    text-align: center;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Center all container elements */
+  .container,
+  .section,
+  .landing-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    margin: 0 auto;
+  }
+  
+  /* Fix button alignment */
+  .button-group,
+  .action-buttons,
+  .cta-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+  }
+  
+  .button-group button,
+  .action-buttons button,
+  .cta-buttons button {
+    width: 100%;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+}
+
+/* Ultra-small devices */
+@media (max-width: 480px) {
+  .hero-content,
+  .section-content,
+  .landing-content,
+  .main-content {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+}

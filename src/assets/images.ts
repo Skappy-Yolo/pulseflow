@@ -1,6 +1,6 @@
 // Image assets - Production ready paths
 export const images = {
-  // Profile images - using placeholder SVGs for now
+  // Profile images - using existing placeholder SVGs
   image21: "/images/profile1.svg",
   image23: "/images/profile1.svg", 
   profile1: "/images/profile1.svg",
@@ -8,7 +8,7 @@ export const images = {
   profile3: "/images/profile1.svg",
   profile4: "/images/profile1.svg",
   
-  // Content images - using placeholder SVGs for now
+  // Content images - using existing placeholder SVGs  
   image19: "/images/dashboard.svg",
   image20: "/images/analytics.svg",
   image9: "/images/dashboard.svg",
@@ -28,21 +28,26 @@ export const images = {
   googleCalendar: "/logos/Google_Calendar_icon_(2020) 1.svg",
   googleAnalytics: "/logos/google-analytics-1 1.png",
   zenBig: "/logos/ZEN_BIG 1.svg",
-  slack: "/logos/Slack_icon_2019 1.svg", // Fixed path
+  slack: "/logos/Slack_icon_2019 1.svg",
+  mixpanel: "/logos/Mixpanel.png",
+  amplitude: "/logos/amplitude.png", 
+  stripe: "/logos/Stripe.png",
+  twilio: "/logos/twilio.png",
+  microsoft: "/logos/microsoft.png",
   
   // For now these are placeholder until we restore the original images
   layer: "/images/dashboard.svg", // Temporary placeholder
   group1: "/images/analytics.svg", // Temporary placeholder
   
-  // UI elements
-  checkCircle: "/images/check-circle.svg",
-  checkCircleInner: "/images/check-circle-inner.svg", 
-  warning: "/images/warning.svg",
+  // UI elements - using placeholder paths for now
+  checkCircle: "/images/profile1.svg", // Temporary placeholder
+  checkCircleInner: "/images/profile1.svg", // Temporary placeholder
+  warning: "/images/profile1.svg", // Temporary placeholder
   
-  // Rectangles for client cards
-  rectangle341: "/images/rectangle341.svg",
-  rectangle342: "/images/rectangle342.svg",
-  rectangle343: "/images/rectangle343.svg",
+  // Rectangles for client cards - using placeholder paths
+  rectangle341: "/images/profile1.svg", // Temporary placeholder  
+  rectangle342: "/images/profile1.svg", // Temporary placeholder
+  rectangle343: "/images/profile1.svg", // Temporary placeholder
 } as const;
 
 export type ImageKey = keyof typeof images;
