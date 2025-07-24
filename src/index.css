@@ -127,13 +127,11 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 20px !important;
     line-height: 1.4;
   }
-  
   /* Ensure text is readable */
   body {
     font-size: 16px;
     line-height: 1.5;
   }
-}
 
 /* High DPI displays (retina) */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {

@@ -1,11 +1,11 @@
 // Image assets - Production ready paths
 export const images = {
-  // Profile images - using uploaded profile pictures
+  // Profile images - using uploaded profile pictures (CORRECTED MAPPING)
   image21: "/images/profiles/Bunqqi.png",
   image23: "/images/profiles/ENIES.png", 
-  profile1: "/images/profiles/Bunqqi.png",
-  profile2: "/images/profiles/ENIES.png",
-  profile3: "/images/profiles/Nolum.png",
+  profile1: "/images/profiles/Nolum.png", // Nolum.eu uses profile1
+  profile2: "/images/profiles/ENIES.png", // ENIES uses profile2
+  profile3: "/images/profiles/Bunqqi.png", // Bunqqi uses profile3
   profile4: "/images/profiles/Bunqqi.png",
   
   // Content images - using uploaded "Did you know" images
