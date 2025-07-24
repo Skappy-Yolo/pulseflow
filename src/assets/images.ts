@@ -1,4 +1,4 @@
-// Image assets - Production ready paths
+// Image assets - Production ready paths (Updated: Force deployment)
 export const images = {
   // Profile images - using uploaded profile pictures (CORRECTED MAPPING)
   image21: "/images/profiles/Bunqqi.png",
@@ -8,12 +8,12 @@ export const images = {
   profile3: "/images/profiles/Bunqqi.png", // Bunqqi uses profile3
   profile4: "/images/profiles/Bunqqi.png",
   
-  // Content images - using uploaded "Did you know" images
-  image19: "/images/Did you know 1.jpg",
-  image20: "/images/Did you know 2.jpg",
-  image9: "/images/Did you know 1.jpg",
-  image10: "/images/Did you know 2.jpg",
-  image11: "/images/Did you know 1.jpg",
+  // Content images - using renamed files without spaces
+  image19: "/images/Did-you-know-1.jpg",
+  image20: "/images/Did-you-know-2.jpg",
+  image9: "/images/Did-you-know-1.jpg",
+  image10: "/images/Did-you-know-2.jpg",
+  image11: "/images/Did-you-know-1.jpg",
   
   // SVG assets - MAIN PULSEFLOW LOGO (the real one!)
   heartbeatIcon: "/images/Heartbeat.svg", // This is the correct PulseFlow logo
@@ -35,9 +35,9 @@ export const images = {
   twilio: "/logos/twilio.png",
   microsoft: "/logos/microsoft.png",
   
-  // For now these are placeholder until we restore the original images
-  layer: "/images/Did you know 1.jpg", // Using uploaded image
-  group1: "/images/Did you know 2.jpg", // Using uploaded image
+  // For now these are placeholder until we restore the original images  
+  layer: "/images/Did-you-know-1.jpg", // Using renamed image files
+  group1: "/images/Did-you-know-2.jpg", // Using renamed image files
   
   // UI elements - using placeholder paths for now
   checkCircle: "/images/profile1.svg", // Temporary placeholder
