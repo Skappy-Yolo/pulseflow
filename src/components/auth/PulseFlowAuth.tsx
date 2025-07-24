@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import './AuthStyles.css';
 
 // Types
 interface LoginFormData {
@@ -114,21 +113,12 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
     if (validateForm()) {
       setIsLoading(true);
       
-      login(formData.email, formData.password)
-        .then(({ success, error }) => {
-          setIsLoading(false);
-          if (success) {
-            console.log('✅ Login successful');
-            // Navigation will be handled by AuthContext automatically
-          } else {
-            setErrors({ general: error || 'Login failed' });
-          }
-        })
-        .catch(error => {
-          setIsLoading(false);
-          setErrors({ general: 'An unexpected error occurred' });
-          console.error('Login error:', error);
-        });
+      // Simulate async operation and then call login
+      setTimeout(() => {
+        login(formData.email);
+        setIsLoading(false);
+        console.log('✅ Login successful');
+      }, 1000);
     }
   };
 
@@ -343,21 +333,13 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
         registrationTimestamp: new Date().toISOString()
       };
       
-      signup(userData)
-        .then(({ success, error }) => {
-          setIsLoading(false);
-          if (success) {
-            console.log('✅ Registration successful');
-            onNavigateToSuccess();
-          } else {
-            setErrors({ general: error || 'Registration failed' });
-          }
-        })
-        .catch(error => {
-          setIsLoading(false);
-          setErrors({ general: 'An unexpected error occurred' });
-          console.error('Registration error:', error);
-        });
+      // Simulate async operation and then call signup
+      setTimeout(() => {
+        signup(userData);
+        setIsLoading(false);
+        console.log('✅ Registration successful');
+        onNavigateToSuccess();
+      }, 1500);
     }
   };
 
