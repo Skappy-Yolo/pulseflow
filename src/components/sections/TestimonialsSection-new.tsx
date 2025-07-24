@@ -1,7 +1,6 @@
 import React from 'react';
 import { Section, SectionHeader } from '../ui/Section';
 import { TestimonialCard } from '../ui/TestimonialCard';
-import { images } from '../../assets/images';
 
 const TestimonialsSection: React.FC = () => {
   const testimonials = [
@@ -9,21 +8,21 @@ const TestimonialsSection: React.FC = () => {
       name: "Samuel",
       company: "Miska Inc",
       role: "Remote Systems Lead",
-      avatar: images.profile1,
+      avatar: "/images/profiles/Nolum.png",
       quote: "PulseFlow has been a game changer for our remote team. We can now track all our projects and client health in one dashboard without switching between 5 different tools."
     },
     {
       name: "Sarah Chen",
       company: "TechFlow Solutions",
       role: "Operations Director",
-      avatar: images.profile2,
+      avatar: "/images/profiles/Bunqqi.png",
       quote: "Finally, a tool that gives us real-time insights across all our client touchpoints. Our team productivity has increased by 40% since implementing PulseFlow."
     },
     {
       name: "Michael Rodriguez",
       company: "Growth Partners",
       role: "Senior Consultant",
-      avatar: images.profile3,
+      avatar: "/images/profiles/ENIES.png",
       quote: "The unified reporting has eliminated hours of manual data gathering. Now I can focus on strategy instead of chasing down numbers from different systems."
     }
   ];

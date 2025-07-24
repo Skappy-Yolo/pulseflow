@@ -1,5 +1,4 @@
 import React from 'react';
-import { images } from '../../assets/images';
 
 const IntegrationsSection: React.FC = () => {
   return (
@@ -16,31 +15,31 @@ const IntegrationsSection: React.FC = () => {
 
         <div className="grid grid-cols-3 lg:grid-cols-6 gap-8 items-center justify-items-center">
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.hubspot} alt="HubSpot" className="w-full h-full object-contain" />
+            <img src="/images/placeholder.png" alt="HubSpot" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.teams} alt="Microsoft Teams" className="w-full h-full object-contain" />
+            <img src="/images/placeholder.png" alt="Microsoft Teams" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.zapier} alt="Zapier" className="w-full h-full object-contain" />
+            <img src="/images/placeholder.png" alt="Zapier" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.googleCalendar} alt="Google Calendar" className="w-full h-full object-contain" />
+            <img src="/images/placeholder.png" alt="Google Calendar" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.googleAnalytics} alt="Google Analytics" className="w-full h-full object-contain" />
+            <img src="/images/placeholder.png" alt="Google Analytics" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.zenBig} alt="Zendesk" className="w-full h-full object-contain" />
+            <img src="/images/placeholder.png" alt="Zendesk" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.layer} alt="Layer" className="w-full h-full object-contain" />
+            <img src="/images/Did-you-know-1.jpg" alt="Layer" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.group1} alt="Integration" className="w-full h-full object-contain" />
+            <img src="/images/Did-you-know-2.jpg" alt="Integration" className="w-full h-full object-contain" />
           </div>
           <div className="w-16 h-16 flex items-center justify-center">
-            <img src={images.slack} alt="Slack" className="w-full h-full object-contain" />
+            <img src="/images/placeholder.png" alt="Slack" className="w-full h-full object-contain" />
           </div>
         </div>
 

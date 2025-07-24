@@ -1,4 +1,3 @@
-import { images } from '../../assets/images';
 import './DidYouKnowSection.css';
 
 // Reusable Button Component (same as used before)
@@ -85,7 +84,7 @@ const DidYouKnowSection = () => {
           {/* Right Content */}
           <div className="content-right">
             <ImageComponent 
-              src={images.image9} 
+              src="/images/Did-you-know-1.jpg"
               alt="Person looking stressed at computer - business workflow struggles"
               className="main-image"
             />
@@ -97,7 +96,7 @@ const DidYouKnowSection = () => {
           {/* Left Image */}
           <div className="bottom-left">
             <ImageComponent 
-              src={images.image11} 
+              src="/images/Did-you-know-2.jpg"
               alt="Business conflict resolution - team collaboration"
               className="solution-image"
             />

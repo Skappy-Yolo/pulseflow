@@ -1,5 +1,4 @@
 import React from 'react';
-import { images } from '../../assets/images';
 
 const Footer: React.FC = () => {
   return (
@@ -13,7 +12,7 @@ const Footer: React.FC = () => {
               <div className="flex items-center gap-1.5">
                 <div className="relative w-8 h-8">
                   <img
-                    src={images.heartbeatIcon}
+                    src="/images/Heartbeat.svg"
                     alt="PulseFlow Icon"
                     className="w-full h-full object-contain filter brightness-0 invert"
                   />

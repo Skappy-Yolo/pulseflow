@@ -1,7 +1,6 @@
 ﻿import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import './Navbar.css';
-import { images } from '../../assets/images';
 import { useAuth } from '../../contexts/AuthContext';
 
 const Navigation = () => {
@@ -10,7 +9,7 @@ const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
   // Debug: Log the heartbeatIcon path
-  console.log('Heartbeat icon path:', images.heartbeatIcon);
+  console.log('Heartbeat icon path:', "/images/Heartbeat.svg");
 
   const handleLogout = () => {
     logout();

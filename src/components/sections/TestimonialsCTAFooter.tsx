@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { images } from '../../assets/images';
 import './TestimonialsCTAFooter.css';
 
 // TypeScript interfaces
@@ -128,21 +127,21 @@ const TestimonialsSection = () => {
   const customers: Customer[] = [
     {
       company: 'Nolum.eu',
-      avatar: images.profile1, // Using actual profile image from assets
+      avatar: "/images/profiles/Nolum.png", // Direct path to Nolum profile
       quote: 'We went from drowning in client data to surfing on top of it. I\'m managing 3x more clients and my team actually enjoys Monday mornings now.',
       name: 'Consuela Nicula',
       title: 'CEO'
     },
     {
       company: 'Bunqqi',
-      avatar: images.profile3, // Swapped back to profile3
+      avatar: "/images/profiles/Bunqqi.png", // Direct path to Bunqqi profile
       quote: 'Finally, I can see our entire product ecosystem in seconds. No more conflicting reports or endless meetings to understand what\'s happening.',
       name: 'Delphine De Vrij',
       title: 'Chief Product Officer'
     },
     {
       company: 'ENIES',
-      avatar: images.profile2, // Swapped back to profile2
+      avatar: "/images/profiles/ENIES.png", // Direct path to ENIES profile
       quote: 'The data unification alone saved us 20 working hours per week. But the real value is catching issues before they impact revenue.',
       name: 'Virgil Sleuten',
       title: 'RevOps Manager'
@@ -249,7 +248,7 @@ const Footer = () => {
           <div className="footer-brand">
             <a href="#" className="footer-logo">
               <img
-                src={images.heartbeatIcon}
+                src="/images/Heartbeat.svg"
                 alt="PulseFlow Icon"
                 width="32"
                 height="32"

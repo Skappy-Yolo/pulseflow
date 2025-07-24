@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
-import { images } from '../../assets/images';
 import { useAuth } from '../../contexts/AuthContext';
 import './AuthStyles.css';
 
@@ -52,7 +51,7 @@ const PulseFlowLogo = () => {
   return (
     <div className="flex items-center justify-center space-x-4">
       <img
-        src={images.heartbeatIcon}
+        src="/images/Heartbeat.svg"
         alt="PulseFlow Icon"
         width="32"
         height="32"

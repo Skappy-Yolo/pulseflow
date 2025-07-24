@@ -1,5 +1,4 @@
 import React from 'react';
-import { images } from '../../assets/images';
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
@@ -23,7 +22,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md', className = '' }) => {
     <div className={`flex items-center gap-1.5 ${className}`}>
       <div className={`relative ${sizeClasses[size]}`}>
         <img
-          src={images.heartbeatIcon}
+          src="/images/Heartbeat.svg"
           alt="PulseFlow Icon"
           className="w-full h-full object-contain"
         />
