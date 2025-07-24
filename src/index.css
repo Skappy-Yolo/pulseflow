@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&display=swap');
 @import './styles/figma-utilities.css';
+@import './styles/mobile-responsive.css';
 
 /* Tailwind CSS v4 Directives */
 @import "tailwindcss";
@@ -20,6 +21,7 @@ body {
   min-height: 100vh;
   background-color: #ffffff;
   overflow-x: hidden; /* Prevent horizontal scroll */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 .adjustLetterSpacing {
@@ -34,6 +36,13 @@ body {
 img {
   max-width: 100%;
   height: auto;
+  display: block;
+}
+
+/* Better text rendering on mobile */
+h1, h2, h3, h4, h5, h6 {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Ensure all sections are properly contained on mobile */
@@ -42,10 +51,64 @@ img {
     padding: 0 16px;
     max-width: 100%;
   }
+  
+  /* Better button touch targets */
+  button, .btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Improved form elements */
+  input, textarea, select {
+    font-size: 16px; /* Prevents zoom on iOS */
+    padding: 12px 16px;
+  }
+  
+  /* Better spacing for mobile */
+  section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+  }
 }
 
 @media (max-width: 480px) {
   .section-container {
     padding: 0 12px;
+  }
+  
+  /* Smaller spacing on very small screens */
+  section {
+    padding-top: 32px;
+    padding-bottom: 32px;
+  }
+  
+  /* Ensure text is readable */
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+}
+
+/* High DPI displays (retina) */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

@@ -114,7 +114,7 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
     if (validateForm()) {
       setIsLoading(true);
       
-      login(formData.email)
+      login(formData.email, formData.password)
         .then(({ success, error }) => {
           setIsLoading(false);
           if (success) {

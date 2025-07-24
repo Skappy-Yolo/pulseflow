@@ -1,33 +1,45 @@
-# PulseFlow Application
+# 🚀 PulseFlow - Modern SaaS Landing & Authentication
 
-A comprehensive React TypeScript application with landing page and authentication system, built with Vite and Tailwind CSS.
+A production-ready React TypeScript application featuring a comprehensive landing page and authentication system with Supabase backend.
 
-## 🚀 Features
+## 🌐 Live Application
+- **Homepage**: https://pulseflows.netlify.app/
+- **Demo**: https://pulseflows.netlify.app/signup
 
-### Landing Page
-- **Modern Tech Stack**: React 18 + TypeScript + Vite
-- **Styling**: Tailwind CSS with custom design system
-- **Component Architecture**: Modular, reusable components
-- **Responsive Design**: Mobile-first responsive layout
-- **Performance**: Optimized with Vite's fast build tool
-- **Type Safety**: Full TypeScript support
+## ✨ Features
 
-### Authentication System
-- **Complete Auth Flow**: Login, Registration, and Success pages
-- **Professional Forms**: Multi-step registration with role-based fields
-- **Email Validation**: Work domain checking and validation
-- **Responsive Design**: Optimized 40/60 layout split
-- **Brand Integration**: Blue branding and consistent styling
-- **Form Management**: React hooks with error handling
+### 🎨 Landing Page
+- **Modern Design**: Professional SaaS landing page with hero, features, testimonials
+- **Responsive Layout**: Mobile-first design optimized for all devices
+- **Component Architecture**: Modular, reusable React components
+- **Performance**: Built with Vite for fast development and optimized builds
+- **TypeScript**: Full type safety and developer experience
 
-## 🛠️ Development
+### 🔐 Authentication System
+- **Complete Auth Flow**: Login → Registration → Protected Success Page
+- **Supabase Backend**: Secure user management with PostgreSQL database
+- **Protected Routes**: Route guards preventing unauthorized access
+- **Work Email Validation**: Business email verification for lead quality
+- **Session Persistence**: Users stay logged in across browser sessions
+- **Professional UI**: Clean, responsive authentication forms
 
-### Prerequisites
+### 🛡️ Security Features
+- **Route Protection**: Success page requires completed signup
+- **Input Validation**: Client and server-side validation
+- **Secure Database**: Supabase handles authentication tokens securely
+- **Business Email Only**: Filters out personal email domains
+- **Error Handling**: Graceful failure states with user feedback
 
-- Node.js 18+ 
-- npm or yarn
+## 🛠️ Tech Stack
 
-### Getting Started
+- **Frontend**: React 18, TypeScript, Tailwind CSS
+- **Build Tool**: Vite for fast development and optimized builds
+- **Backend**: Supabase (PostgreSQL + Authentication)
+- **Routing**: React Router with protected routes
+- **Deployment**: Netlify with auto-deployment from GitHub
+- **Icons**: Lucide React for consistent iconography
+
+## 🚀 Getting Started
 
 1. **Install dependencies**:
 ```bash

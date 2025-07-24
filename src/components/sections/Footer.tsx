@@ -3,7 +3,7 @@ import { images } from '../../assets/images';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-900 text-white px-[84px] py-16">
+    <footer className="bg-gray-900 text-white px-4 md:px-8 lg:px-[84px] py-8 md:py-12 lg:py-16">
       <div className="max-w-6xl mx-auto">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">

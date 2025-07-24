@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../lib/supabase';
-import type { UserProfile } from '../lib/supabase';
+import { supabase } from '../../lib/supabase';
+import type { UserProfile } from '../../lib/supabase';
 import { Users, Mail, Building2, Calendar, Download, RefreshCw } from 'lucide-react';
 
 interface AdminDashboardProps {
