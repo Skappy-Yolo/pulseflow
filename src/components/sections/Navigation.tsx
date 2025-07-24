@@ -8,6 +8,9 @@ const Navigation = () => {
   const navigate = useNavigate();
   const { isAuthenticated, userEmail, logout } = useAuth();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  
+  // Debug: Log the heartbeatIcon path
+  console.log('Heartbeat icon path:', images.heartbeatIcon);
 
   const handleLogout = () => {
     logout();
@@ -30,10 +33,12 @@ const Navigation = () => {
       <div className="navbar-container">
         <a href="/" className="footer-logo">
           <img
-            src={images.heartbeatIcon}
+            src="/images/Heartbeat.svg"
             alt="PulseFlow Icon"
             width="32"
             height="32"
+            onError={(e) => console.log('Logo failed to load:', e)}
+            onLoad={() => console.log('Logo loaded successfully')}
           />
           PulseFlow
         </a>
