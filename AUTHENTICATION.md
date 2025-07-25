@@ -34,8 +34,8 @@ Landing → "Log in" → Login Form → Dashboard Access
 ## Environment Setup
 ```bash
 # Required environment variables (.env.local)
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_key
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
 ## Testing Authentication

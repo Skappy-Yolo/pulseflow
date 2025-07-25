@@ -2,10 +2,6 @@
 
 A production-ready React TypeScript application featuring a comprehensive landing page and authentication system with Supabase backend.
 
-## 🌐 Live Application
-- **Homepage**: https://pulseflows.netlify.app/
-- **Demo**: https://pulseflows.netlify.app/signup
-
 ## ✨ Features
 
 ### 🎨 Landing Page
@@ -46,8 +42,69 @@ A production-ready React TypeScript application featuring a comprehensive landin
 npm install
 ```
 
-2. **Start development server**:
+2. **Environment Setup**:
 ```bash
+# Create .env.local file
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+```
+
+3. **Start development server**:
+```bash
+npm run dev
+```
+
+4. **Build for production**:
+```bash
+npm run build
+```
+
+## 🏗️ Project Structure
+
+```
+src/
+├── components/
+│   ├── auth/              # Authentication components
+│   │   ├── PulseFlowAuth.tsx
+│   │   └── StandaloneSuccessPage.tsx
+│   ├── sections/          # Landing page sections
+│   │   ├── Navigation.tsx
+│   │   ├── Hero.tsx
+│   │   ├── DidYouKnowSection.tsx
+│   │   ├── SolutionsSection.tsx
+│   │   └── TestimonialsCTAFooter.tsx
+│   └── ui/               # Reusable UI components
+├── contexts/             # React contexts
+│   └── AuthContext.tsx
+├── lib/                  # Utilities
+│   └── supabase.ts
+└── styles/              # Global styles
+```
+
+## 🔧 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run preview` - Preview production build
+- `npm run lint` - Run ESLint
+
+## 📱 Routes
+
+- `/` - Landing page
+- `/login` - User login
+- `/signup` - User registration  
+- `/success` - Protected success page (requires signup)
+
+## 🌐 Deployment
+
+This project is configured for Netlify deployment with:
+- Automatic builds from GitHub
+- Environment variable management
+- Custom redirects for SPA routing
+
+## 📄 License
+
+This project is private and proprietary.
 npm run dev
 ```
 

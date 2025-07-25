@@ -74,17 +74,7 @@
   transform: translateY(-1px);
 }
 
-.btn-secondary {
-  background: #9333EA;
-  color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.btn-secondary:hover {
-  background: #7C3AED;
-  box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3);
-  transform: translateY(-1px);
-}
+/* btn-secondary styles moved to HeroSection.css to avoid conflicts */
 
 .consulting-btn {
   position: absolute;

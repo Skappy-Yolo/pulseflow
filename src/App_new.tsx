@@ -58,7 +58,7 @@ function App() {
               path="/success" 
               element={
                 <ProtectedRoute requireSignup={true}>
-                  <SuccessPage />
+                  <SuccessPage onNavigateToLogin={() => window.location.href = '/login'} />
                 </ProtectedRoute>
               } 
             />
