@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
+import { supabase } from '../../lib/supabase';
 
 // TypeScript interfaces
 interface LoginFormData {
@@ -29,15 +30,11 @@ interface LoginPageProps {
 
 interface RegistrationPageProps {
   onNavigateToLogin: () => void;
-  onNavigateToSuccess: (userData: {firstName: string; workEmail: string}) => void;
+  onNavigateToSuccess: () => void;
 }
 
 interface SuccessPageProps {
   onNavigateToLogin: () => void;
-  userData?: {
-    firstName: string;
-    workEmail: string;
-  };
 }
 
 // Logo Component - ENHANCED with superior spacing and blue text
@@ -77,6 +74,8 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
   const [emailError, setEmailError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const [loginMode, setLoginMode] = useState<'password' | 'magic'>('password');
 
   const handleEmailChange = (email: string) => {
     setFormData({...formData, email});
@@ -90,6 +89,50 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
       if (!isWorkEmail(email)) {
         setEmailError('Please use your work email address');
       }
+    }
+  };
+
+  const toggleLoginMode = () => {
+    setLoginMode(loginMode === 'password' ? 'magic' : 'password');
+    setMagicLinkSent(false);
+    setErrors({});
+    setEmailError('');
+  };
+
+  const handleMagicLink = async () => {
+    if (!formData.email.trim()) {
+      setErrors({ email: 'Please enter your email address' });
+      return;
+    }
+    
+    if (!isWorkEmail(formData.email)) {
+      setEmailError('Please use your work email address');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: formData.email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+      
+      if (error) {
+        if (error.message.includes('User not found') || error.message.includes('Invalid user')) {
+          setErrors({ email: 'Account not found. Please contact support or register for access.' });
+        } else {
+          setErrors({ email: error.message });
+        }
+      } else {
+        setMagicLinkSent(true);
+      }
+    } catch (error) {
+      console.error('Magic link failed:', error);
+      setErrors({ email: 'Failed to send magic link. Please try again.' });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -233,11 +276,12 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
                     )}
                   </div>
 
-                  {/* Password - Enhanced styling */}
-                  <div style={{ marginBottom: '32px' }}>
-                    <label style={{ display: 'block', fontSize: '16px', fontWeight: '500', color: '#374151', marginBottom: '8px', textAlign: 'left' }}>
-                      Password
-                    </label>
+                  {/* Password - Enhanced styling (conditional) */}
+                  {loginMode === 'password' && (
+                    <div style={{ marginBottom: '32px' }}>
+                      <label style={{ display: 'block', fontSize: '16px', fontWeight: '500', color: '#374151', marginBottom: '8px', textAlign: 'left' }}>
+                        Password
+                      </label>
                     <div style={{ position: 'relative' }}>
                       <input
                         type={showPassword ? 'text' : 'password'}
@@ -289,10 +333,12 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
                         {errors.password}
                       </p>
                     )}
-                  </div>
+                    </div>
+                  )}
 
-                  {/* Remember Me & Forgot Password - Enhanced visibility */}
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px' }}>
+                  {/* Remember Me & Forgot Password - Enhanced visibility (conditional) */}
+                  {loginMode === 'password' && (
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '40px' }}>
                     <label style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
                       <input 
                         type="checkbox" 
@@ -331,12 +377,14 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
                     >
                       Forgot password?
                     </button>
-                  </div>
+                    </div>
+                  )}
 
                   {/* Login Button - Enhanced styling */}
                   <div style={{ marginBottom: '48px' }}>
                     <button
                       type="submit"
+                      onClick={loginMode === 'magic' ? (e) => { e.preventDefault(); handleMagicLink(); } : undefined}
                       disabled={isLoading}
                       style={{
                         width: '100%',
@@ -373,7 +421,10 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
                         }
                       }}
                     >
-                      {isLoading ? 'Signing In...' : 'Login →'}
+                      {isLoading 
+                        ? (loginMode === 'magic' ? 'Sending Magic Link...' : 'Signing In...') 
+                        : (loginMode === 'magic' ? 'Send Magic Link →' : 'Login →')
+                      }
                     </button>
                   </div>
 
@@ -469,6 +520,52 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
                       <img src="/logos/microsoft.png" alt="Microsoft" style={{ width: '20px', height: '20px' }} />
                       <span style={{ color: '#374151', fontWeight: '600' }}>Microsoft</span>
                     </button>
+                  </div>
+
+                  {/* Mode Toggle - Clean and minimal */}
+                  <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+                    {magicLinkSent ? (
+                      <div style={{ 
+                        padding: '16px', 
+                        backgroundColor: '#dcfce7', 
+                        border: '1px solid #bbf7d0', 
+                        borderRadius: '8px',
+                        marginBottom: '16px'
+                      }}>
+                        <p style={{ fontSize: '14px', color: '#166534', fontWeight: '500', margin: 0 }}>
+                          ✅ Magic link sent! Check your email to login.
+                        </p>
+                      </div>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={toggleLoginMode}
+                        disabled={isLoading}
+                        style={{
+                          fontSize: '14px',
+                          color: '#6b7280',
+                          background: 'none',
+                          border: 'none',
+                          cursor: isLoading ? 'not-allowed' : 'pointer',
+                          textDecoration: 'underline',
+                          fontWeight: '500',
+                          opacity: isLoading ? 0.5 : 1,
+                          transition: 'color 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isLoading) {
+                            (e.target as HTMLButtonElement).style.color = '#2563eb';
+                          }
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isLoading) {
+                            (e.target as HTMLButtonElement).style.color = '#6b7280';
+                          }
+                        }}
+                      >
+                        {loginMode === 'password' ? 'Or login with magic link' : 'Or login with password'}
+                      </button>
+                    )}
                   </div>
 
                   {/* Sign up link - Enhanced spacing and visibility */}
@@ -581,10 +678,7 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
       setTimeout(() => {
         console.log('✅ Registration successful:', userData);
         setIsLoading(false);
-        onNavigateToSuccess({
-          firstName: formData.firstName,
-          workEmail: formData.workEmail
-        });
+        onNavigateToSuccess();
       }, 1500);
     }
   };
@@ -1269,8 +1363,8 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
 
 // Success Page Component - ORIGINAL DESIGN  
 // Success Page Component - ENHANCED & FIXED with CheckCircle icons
-export const SuccessPage = ({ onNavigateToLogin, userData }: SuccessPageProps) => {
-  const user = userData || {
+export const SuccessPage = ({ onNavigateToLogin }: SuccessPageProps) => {
+  const user = {
     firstName: 'John',
     workEmail: 'john.doe@company.com'
   };
@@ -1399,7 +1493,6 @@ export const SuccessPage = ({ onNavigateToLogin, userData }: SuccessPageProps) =
 // Main Authentication Flow Component - Clean Production Version
 const PulseFlowAuth = () => {
   const [currentPage, setCurrentPage] = useState<'login' | 'register' | 'success'>('login');
-  const [userData, setUserData] = useState<{firstName: string; workEmail: string} | undefined>(undefined);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -1409,14 +1502,11 @@ const PulseFlowAuth = () => {
         return (
           <RegistrationPage 
             onNavigateToLogin={() => setCurrentPage('login')}
-            onNavigateToSuccess={(data) => {
-              setUserData(data);
-              setCurrentPage('success');
-            }}
+            onNavigateToSuccess={() => setCurrentPage('success')}
           />
         );
       case 'success':
-        return <SuccessPage onNavigateToLogin={() => setCurrentPage('login')} userData={userData} />;
+        return <SuccessPage onNavigateToLogin={() => setCurrentPage('login')} />;
       default:
         return <LoginPage onNavigateToSignup={() => setCurrentPage('register')} />;
     }
