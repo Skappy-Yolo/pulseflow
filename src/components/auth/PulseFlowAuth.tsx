@@ -29,11 +29,15 @@ interface LoginPageProps {
 
 interface RegistrationPageProps {
   onNavigateToLogin: () => void;
-  onNavigateToSuccess: () => void;
+  onNavigateToSuccess: (userData: {firstName: string; workEmail: string}) => void;
 }
 
 interface SuccessPageProps {
   onNavigateToLogin: () => void;
+  userData?: {
+    firstName: string;
+    workEmail: string;
+  };
 }
 
 // Logo Component - ENHANCED with superior spacing and blue text
@@ -577,7 +581,10 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
       setTimeout(() => {
         console.log('✅ Registration successful:', userData);
         setIsLoading(false);
-        onNavigateToSuccess();
+        onNavigateToSuccess({
+          firstName: formData.firstName,
+          workEmail: formData.workEmail
+        });
       }, 1500);
     }
   };
@@ -1262,8 +1269,8 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
 
 // Success Page Component - ORIGINAL DESIGN  
 // Success Page Component - ENHANCED & FIXED with CheckCircle icons
-export const SuccessPage = ({ onNavigateToLogin }: SuccessPageProps) => {
-  const user = {
+export const SuccessPage = ({ onNavigateToLogin, userData }: SuccessPageProps) => {
+  const user = userData || {
     firstName: 'John',
     workEmail: 'john.doe@company.com'
   };
@@ -1392,6 +1399,7 @@ export const SuccessPage = ({ onNavigateToLogin }: SuccessPageProps) => {
 // Main Authentication Flow Component - Clean Production Version
 const PulseFlowAuth = () => {
   const [currentPage, setCurrentPage] = useState<'login' | 'register' | 'success'>('login');
+  const [userData, setUserData] = useState<{firstName: string; workEmail: string} | undefined>(undefined);
 
   const renderPage = () => {
     switch (currentPage) {
@@ -1401,11 +1409,14 @@ const PulseFlowAuth = () => {
         return (
           <RegistrationPage 
             onNavigateToLogin={() => setCurrentPage('login')}
-            onNavigateToSuccess={() => setCurrentPage('success')}
+            onNavigateToSuccess={(data) => {
+              setUserData(data);
+              setCurrentPage('success');
+            }}
           />
         );
       case 'success':
-        return <SuccessPage onNavigateToLogin={() => setCurrentPage('login')} />;
+        return <SuccessPage onNavigateToLogin={() => setCurrentPage('login')} userData={userData} />;
       default:
         return <LoginPage onNavigateToSignup={() => setCurrentPage('register')} />;
     }
