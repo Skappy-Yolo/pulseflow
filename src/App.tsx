@@ -32,6 +32,15 @@ const RegistrationPageWrapper: React.FC = () => {
   );
 };
 
+const SuccessPageWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  return (
+    <SuccessPage 
+      onNavigateToLogin={() => navigate("/login")} 
+    />
+  );
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -57,7 +66,7 @@ function App() {
               path="/success" 
               element={
                 <ProtectedRoute requireSignup={true}>
-                  <SuccessPage onNavigateToLogin={() => window.location.href = '/login'} />
+                  <SuccessPageWrapper />
                 </ProtectedRoute>
               } 
             />

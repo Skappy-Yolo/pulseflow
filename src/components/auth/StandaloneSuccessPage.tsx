@@ -1,5 +1,6 @@
 import React from 'react';
 import { CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // Logo Component - Same as main auth with blue text
 const PulseFlowLogo = () => {
@@ -17,15 +18,14 @@ const PulseFlowLogo = () => {
 
 // Standalone Success Page Component for Testing
 const StandaloneSuccessPage: React.FC = () => {
+  const navigate = useNavigate();
   const user = {
     firstName: 'John',
     workEmail: 'john.doe@company.com'
   };
 
   const handleBackToLogin = () => {
-    // For testing, just log the action
-    console.log('Navigate back to login');
-    // In a real app, this would navigate to login page
+    navigate('/login');
   };
   
   return (
