@@ -21,9 +21,7 @@ const LoginPageWrapper: React.FC = () => {
   return (
     <LoginPage 
       onNavigateToSignup={() => navigate("/signup")} 
-      onNavigateToForgotPassword={function (): void {
-        throw new Error('Function not implemented.');
-      }}    
+      onNavigateToForgotPassword={() => navigate("/forgot-password")}
     />
   );
 };

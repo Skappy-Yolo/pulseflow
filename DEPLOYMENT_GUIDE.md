@@ -40,13 +40,12 @@
 In your Netlify dashboard, set these environment variables:
 
 ```bash
-# Required for Supabase connection
+# Required for Supabase connection (both customer and admin auth use Supabase)
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
-
-# Required for admin authentication  
-VITE_ADMIN_SECRET_KEY=your-super-secret-admin-key-here
 ```
+
+**Note**: The admin authentication system uses the same Supabase instance as customer auth, so no additional admin-specific environment variables are needed.
 
 ## 🚀 **Deployment Steps**
 
@@ -85,8 +84,8 @@ If auto-deploy isn't set up:
 
 ### **If Authentication Fails**
 - Verify environment variables are set in Netlify
-- Check `VITE_ADMIN_SECRET_KEY` matches your admin-auth configuration
-- Ensure Supabase connection is working
+- Check Supabase connection is working (both customer and admin auth use same Supabase instance)
+- Ensure admin users exist in your Supabase auth system
 
 ### **If Customer Site Breaks**
 - Existing customer functionality is preserved
