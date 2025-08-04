@@ -2,6 +2,7 @@
 @import './styles/figma-utilities.css';
 @import './styles/mobile-responsive.css';
 @import './styles/auth-checkbox.css';
+@import './styles/admin-design-system-clean.css';
 
 /* Tailwind CSS v4 Directives */
 @import "tailwindcss";

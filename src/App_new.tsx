@@ -26,6 +26,7 @@ const LoginPageWrapper: React.FC = () => {
   return (
     <LoginPage 
       onNavigateToSignup={() => navigate("/signup")} 
+      onNavigateToForgotPassword={() => navigate("/forgot-password")}
     />
   );
 };

@@ -72,6 +72,8 @@ export interface CustomerUser {
   rejectionReason?: string;
   lastLoginAt?: string;
   authUserId?: string; // Links to Supabase auth.users
+  demo_date?: string;
+  assigned_to?: string;
 }
 
 export type CustomerStatus = 
@@ -80,7 +82,10 @@ export type CustomerStatus =
   | 'rejected' 
   | 'suspended'
   | 'active'
-  | 'inactive';
+  | 'inactive'
+  | 'trial'
+  | 'demo'
+  | 'cancelled';
 
 // Admin authentication related types
 export interface AdminLoginCredentials {

@@ -1,0 +1,243 @@
+// src/AdminTestApp.tsx
+// SAFE TESTING VERSION - Test admin system without touching main App.tsx
+
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+
+// Admin components only
+import AdminLogin from './components/admin/auth/AdminLogin';
+import AdminLayout from './components/admin/Layout/AdminLayout';
+import AdminProtectedRoute from './components/admin/Layout/AdminProtectedRoute';
+import AdminDashboard from './components/admin/dashboard/AdminDashboard';
+import CustomerUserManagement from './components/admin/dashboard/CustomerUserManagement';
+import AdminUserManagement from './components/admin/dashboard/AdminUserManagement';
+
+// Admin route wrappers
+const AdminLoginWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  
+  const handleLoginSuccess = () => {
+    navigate('/admin/dashboard');
+  };
+  
+  return <AdminLogin onLoginSuccess={handleLoginSuccess} />;
+};
+
+const AdminDashboardWrapper: React.FC = () => {
+  return (
+    <AdminLayout currentPage="Dashboard">
+      <AdminDashboard />
+    </AdminLayout>
+  );
+};
+
+// Removed unused AdminCustomersWrapper and AdminTeamWrapper
+
+// Simple landing page for admin testing
+const AdminTestLanding: React.FC = () => {
+  const navigate = useNavigate();
+  
+  return (
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-slate-900 mb-4 font-['Inter']">
+            Admin System Test
+          </h1>
+          <p className="text-slate-600 mb-6 font-['Inter']">
+            Test your admin system safely without affecting the main app.
+          </p>
+          
+          <div className="space-y-3">
+            <button
+              onClick={() => navigate('/admin/login')}
+              className="w-full px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors font-['Inter']"
+            >
+              Go to Admin Login
+            </button>
+            
+            <button
+              onClick={() => window.open('/', '_blank')}
+              className="w-full px-4 py-2 border border-slate-300 text-slate-700 rounded-lg hover:bg-slate-50 transition-colors font-['Inter']"
+            >
+              Open Main App (New Tab)
+            </button>
+          </div>
+          
+          <div className="mt-6 p-3 bg-green-50 border border-green-200 rounded">
+            <p className="text-sm text-green-800 font-['Inter']">
+              ✅ Your main app is completely safe and untouched
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+// Placeholder for missing admin pages
+const ComingSoon: React.FC<{ label: string }> = ({ label }) => (
+  <div className="flex items-center justify-center h-96">
+    <div className="text-center">
+      <h2 className="text-2xl font-bold mb-2 font-['Inter']">{label}</h2>
+      <p className="text-slate-500 font-['Inter']">This page is coming soon.</p>
+    </div>
+  </div>
+);
+
+function AdminTestApp() {
+  return (
+    <Router>
+      <div className="AdminTestApp">
+        <Routes>
+          {/* Test landing page */}
+          <Route path="/" element={<AdminTestLanding />} />
+
+          {/* Admin Login */}
+          <Route path="/admin/login" element={<AdminLoginWrapper />} />
+
+          {/* Admin Dashboard */}
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <AdminProtectedRoute>
+                <AdminDashboardWrapper />
+              </AdminProtectedRoute>
+            } 
+          />
+
+          {/* Analytics */}
+          <Route 
+            path="/admin/analytics"
+            element={
+              <AdminProtectedRoute requiredPermissions={['users:view']}>
+                <ComingSoon label="Analytics" />
+              </AdminProtectedRoute>
+            }
+          />
+
+          {/* Customer Users */}
+          <Route 
+            path="/admin/users/customers" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['users:view']}>
+                <AdminLayout currentPage="Customer Users">
+                  <CustomerUserManagement />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+
+          {/* Pending Approvals */}
+          <Route 
+            path="/admin/users/pending" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['users:approve']}>
+                <AdminLayout currentPage="Pending Approvals">
+                  <ComingSoon label="Pending Approvals" />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+
+          {/* Admin Users */}
+          <Route 
+            path="/admin/users/admins" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['admin:view']}>
+                <AdminLayout currentPage="Admin Users">
+                  <AdminUserManagement />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+
+          {/* Reports Center */}
+          <Route 
+            path="/admin/reports" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['users:view']}>
+                <AdminLayout currentPage="Reports Center">
+                  <ComingSoon label="Reports Center" />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/reports/users" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['users:view']}>
+                <AdminLayout currentPage="User Reports">
+                  <ComingSoon label="User Reports" />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/reports/activity" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['users:view']}>
+                <AdminLayout currentPage="Activity Reports">
+                  <ComingSoon label="Activity Reports" />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+
+          {/* Audit Logs */}
+          <Route 
+            path="/admin/audit" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['settings:view']}>
+                <AdminLayout currentPage="Audit Logs">
+                  <ComingSoon label="Audit Logs" />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+
+          {/* Settings */}
+          <Route 
+            path="/admin/settings" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['settings:view']}>
+                <AdminLayout currentPage="Settings">
+                  <ComingSoon label="Settings" />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/settings/general" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['settings:update']}>
+                <AdminLayout currentPage="General Settings">
+                  <ComingSoon label="General Settings" />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/settings/security" 
+            element={
+              <AdminProtectedRoute requiredPermissions={['settings:security']}>
+                <AdminLayout currentPage="Security Settings">
+                  <ComingSoon label="Security Settings" />
+                </AdminLayout>
+              </AdminProtectedRoute>
+            } 
+          />
+
+          {/* Admin redirect */}
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </div>
+    </Router>
+  );
+}
+
+export default AdminTestApp;

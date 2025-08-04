@@ -1,0 +1,567 @@
+// src/components/admin/dashboard/UserDetailModal.tsx
+// Component 10: User Detail Modal
+// Detailed view and actions for customer users
+
+import React, { useState, useEffect } from 'react';
+import Select from 'react-select';
+import { 
+  X,
+  User,
+  Mail,
+  Building,
+  Calendar,
+  FileText,
+  UserX,
+  AlertCircle,
+  CheckCircle,
+  Copy,
+  MessageSquare
+} from 'lucide-react';
+import { adminAuth } from '../../../lib/admin-auth';
+import { PERMISSIONS } from '../../../types/admin';
+import type { CustomerUser } from '../../../types/admin';
+
+interface UserDetailModalProps {
+  user: CustomerUser;
+  onClose: () => void;
+  onUserUpdate?: (updatedUser: CustomerUser) => void;
+}
+
+interface AdminUserOption {
+  value: string;
+  label: string;
+}
+
+interface ActionLog {
+  id: string;
+  action: string;
+  adminName: string;
+  reason?: string;
+  timestamp: string;
+}
+
+import { supabase } from '../../../lib/supabase';
+import { logAudit } from '../../../lib/audit';
+import { sendCustomerNotification } from '../../../lib/notifications';
+
+export const UserDetailModal: React.FC<UserDetailModalProps> = ({ user, onClose, onUserUpdate }) => {
+  const [status, setStatus] = useState(user.status);
+  const [demoDate, setDemoDate] = useState(user.demo_date || '');
+  const [assignedTo, setAssignedTo] = useState<AdminUserOption | null>(user.assigned_to ? { value: user.assigned_to, label: '' } : null);
+  const [adminOptions, setAdminOptions] = useState<AdminUserOption[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [actionLogs, setActionLogs] = useState<ActionLog[]>([]);
+  const [showNotes, setShowNotes] = useState(false);
+  const [notes, setNotes] = useState('');
+
+  useEffect(() => {
+    // Fetch admin users for assignment dropdown
+    async function fetchAdmins() {
+      const { data, error } = await supabase.from('admin_users').select('id, firstName, lastName, email');
+      if (!error && data) {
+        setAdminOptions(data.map((admin: any) => ({
+          value: admin.id,
+          label: `${admin.firstName} ${admin.lastName} (${admin.email})`
+        })));
+        // Set label for assignedTo if present
+        if (user.assigned_to) {
+          const found = data.find((a: any) => a.id === user.assigned_to);
+          if (found) setAssignedTo({ value: found.id, label: `${found.firstName} ${found.lastName} (${found.email})` });
+        }
+      }
+    }
+    fetchAdmins();
+  }, [user.assigned_to]);
+
+  useEffect(() => {
+    // Load action history for this user
+    loadActionHistory();
+  }, [user.id]);
+
+  const loadActionHistory = async () => {
+    try {
+      // In a real implementation, this would fetch from admin_audit_logs
+      // For now, create mock data based on user status
+      const mockLogs: ActionLog[] = [];
+      if (user.approvedAt && user.approvedBy) {
+        mockLogs.push({
+          id: '1',
+          action: 'User Approved',
+          adminName: 'Admin User',
+          reason: 'Completed demo successfully',
+          timestamp: user.approvedAt
+        });
+      }
+      mockLogs.push({
+        id: '2',
+        action: 'User Registered',
+        adminName: 'System',
+        timestamp: user.registeredAt
+      });
+      setActionLogs(mockLogs);
+    } catch (error) {
+      console.error('Error loading action history:', error);
+    }
+  };
+
+  // TODO: Implement user approval functionality
+  // const handleApprove = async () => {
+    if (!adminAuth.hasPermission(PERMISSIONS.USERS.APPROVE)) {
+      alert('You do not have permission to approve users');
+      return;
+    }
+
+    const reason = prompt('Reason for approval (optional):');
+    
+    try {
+      setIsLoading(true);
+      const success = await adminAuth.approveCustomerUser(user.id, reason || undefined);
+      
+      if (success) {
+        const updatedUser = { ...user, status: 'approved' as const };
+        onUserUpdate?.(updatedUser);
+        await loadActionHistory();
+        alert('User approved successfully');
+      } else {
+        alert('Failed to approve user');
+      }
+    } catch (error) {
+      console.error('Error approving user:', error);
+      alert('Failed to approve user');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleReject = async () => {
+    if (!adminAuth.hasPermission(PERMISSIONS.USERS.REJECT)) {
+      alert('You do not have permission to reject users');
+      return;
+    }
+
+    const reason = prompt('Please provide a reason for rejection:');
+    if (!reason) return;
+
+    try {
+      setIsLoading(true);
+      const success = await adminAuth.rejectCustomerUser(user.id, reason);
+      
+      if (success) {
+        const updatedUser = { ...user, status: 'rejected' as const, rejectionReason: reason };
+        onUserUpdate?.(updatedUser);
+        await loadActionHistory();
+        alert('User rejected successfully');
+      } else {
+        alert('Failed to reject user');
+      }
+    } catch (error) {
+      console.error('Error rejecting user:', error);
+      alert('Failed to reject user');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSuspend = async () => {
+    if (!adminAuth.hasPermission(PERMISSIONS.USERS.SUSPEND)) {
+      alert('You do not have permission to suspend users');
+      return;
+    }
+
+    const reason = prompt('Please provide a reason for suspension:');
+    if (!reason) return;
+
+    try {
+      setIsLoading(true);
+      const success = await adminAuth.suspendCustomerUser(user.id, reason);
+      
+      if (success) {
+        const updatedUser = { ...user, status: 'suspended' as const };
+        onUserUpdate?.(updatedUser);
+        await loadActionHistory();
+        alert('User suspended successfully');
+      } else {
+        alert('Failed to suspend user');
+      }
+    } catch (error) {
+      console.error('Error suspending user:', error);
+      alert('Failed to suspend user');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    alert('Copied to clipboard');
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
+      case 'approved': return 'bg-green-100 text-green-800 border-green-200';
+      case 'active': return 'bg-green-100 text-green-800 border-green-200';
+      case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
+      case 'suspended': return 'bg-red-100 text-red-800 border-red-200';
+      default: return 'bg-gray-100 text-gray-800 border-gray-200';
+    }
+  };
+
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case 'pending': return <AlertCircle size={16} />;
+      case 'approved': return <CheckCircle size={16} />;
+      case 'active': return <CheckCircle size={16} />;
+      case 'rejected': return <UserX size={16} />;
+      case 'suspended': return <UserX size={16} />;
+      default: return <User size={16} />;
+    }
+  };
+
+  return (
+    <div className="admin-modal-overlay">
+      <div className="admin-modal-container admin-modal-container-lg">
+        {/* Header */}
+        <div className="admin-modal-header">
+          <div className="flex items-center space-x-3">
+            <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center">
+              <User size={24} className="text-indigo-600" />
+            </div>
+            <div>
+              <h2 className="admin-modal-title">
+                {user.firstName && user.lastName 
+                  ? `${user.firstName} ${user.lastName}` 
+                  : 'Customer Details'
+                }
+              </h2>
+              <p className="admin-text-secondary">{user.email}</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="admin-modal-close"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="admin-modal-content admin-modal-large-content">
+          {/* Status, Demo Date, and Assignment */}
+          <div className="admin-form-row">
+            <div className="admin-form-field">
+              <label className="admin-form-label">Status</label>
+              <select
+                value={status}
+                onChange={e => setStatus(e.target.value as any)}
+                className="admin-form-input admin-select"
+              >
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="active">Active</option>
+                <option value="trial">Trial</option>
+                <option value="demo">Demo</option>
+                <option value="rejected">Rejected</option>
+                <option value="suspended">Suspended</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div className="admin-form-field">
+              <label className="admin-form-label">Demo/Trial Date</label>
+              <input
+                type="datetime-local"
+                value={demoDate ? demoDate.substring(0, 16) : ''}
+                onChange={e => setDemoDate(e.target.value)}
+                className="admin-form-input"
+              />
+            </div>
+            <div className="admin-form-field flex-1">
+              <label className="admin-form-label">Assigned Team Member</label>
+              <Select
+                options={adminOptions}
+                value={assignedTo}
+                onChange={setAssignedTo}
+                isClearable
+                placeholder="Assign team member..."
+                classNamePrefix="react-select"
+              />
+            </div>
+            <button
+              onClick={async () => {
+                setIsLoading(true);
+                const prev = { status: user.status, demo_date: user.demo_date, assigned_to: user.assigned_to };
+                const next = { status, demo_date: demoDate, assigned_to: assignedTo?.value };
+                const { error } = await supabase.from('customers').update(next).eq('id', user.id);
+                if (!error) {
+                  onUserUpdate?.({ ...user, ...next });
+                  // Log audit event for each changed field
+                  const adminUserId = localStorage.getItem('adminUserId') || '';
+                  const adminEmail = localStorage.getItem('adminEmail') || '';
+                  if (prev.status !== next.status) {
+                    await logAudit({
+                      adminUserId,
+                      adminEmail,
+                      action: 'customer_status_changed',
+                      targetId: user.id,
+                      details: { from: prev.status, to: next.status },
+                    });
+                    // Email notification to customer
+                    await sendCustomerNotification({
+                      to: user.email,
+                      subject: `Your account status changed to ${next.status}`,
+                      message: `Hello, your account status is now: ${next.status}.`,
+                    });
+                  }
+                  if (prev.demo_date !== next.demo_date) {
+                    await logAudit({
+                      adminUserId,
+                      adminEmail,
+                      action: 'customer_demo_scheduled',
+                      targetId: user.id,
+                      details: { from: prev.demo_date, to: next.demo_date },
+                    });
+                    await sendCustomerNotification({
+                      to: user.email,
+                      subject: `Your demo/trial is scheduled`,
+                      message: `Your demo/trial is now scheduled for: ${next.demo_date}.`,
+                    });
+                  }
+                  if (prev.assigned_to !== next.assigned_to) {
+                    await logAudit({
+                      adminUserId,
+                      adminEmail,
+                      action: 'customer_assigned',
+                      targetId: user.id,
+                      details: { from: prev.assigned_to, to: next.assigned_to },
+                    });
+                    await sendCustomerNotification({
+                      to: user.email,
+                      subject: `A team member has been assigned to you`,
+                      message: `A team member is now assigned to your account.`,
+                    });
+                  }
+                  alert('Customer updated');
+                } else {
+                  alert('Failed to update customer');
+                }
+                setIsLoading(false);
+              }}
+              className="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors font-['Inter'] mt-4 md:mt-0"
+              disabled={isLoading}
+            >
+              {isLoading ? 'Saving...' : 'Save Changes'}
+            </button>
+          </div>
+          {/* ...existing code... */}
+
+          {/* User Information Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Personal Information */}
+            <div className="bg-slate-50 rounded-lg p-4">
+              <h3 className="font-semibold text-slate-900 mb-4 flex items-center space-x-2 font-['Inter']">
+                <User size={18} />
+                <span>Personal Information</span>
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 font-['Inter']">Email:</span>
+                  <div className="flex items-center space-x-2">
+                    <span className="font-medium text-slate-900 font-['Inter']">{user.email}</span>
+                    <button
+                      onClick={() => copyToClipboard(user.email)}
+                      className="text-slate-400 hover:text-slate-600"
+                      title="Copy email"
+                    >
+                      <Copy size={14} />
+                    </button>
+                  </div>
+                </div>
+                
+                {user.firstName && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600 font-['Inter']">First Name:</span>
+                    <span className="font-medium text-slate-900 font-['Inter']">{user.firstName}</span>
+                  </div>
+                )}
+                
+                {user.lastName && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600 font-['Inter']">Last Name:</span>
+                    <span className="font-medium text-slate-900 font-['Inter']">{user.lastName}</span>
+                  </div>
+                )}
+                
+                {user.company && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600 font-['Inter']">Company:</span>
+                    <span className="font-medium text-slate-900 font-['Inter']">{user.company}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Registration Details */}
+            <div className="bg-slate-50 rounded-lg p-4">
+              <h3 className="font-semibold text-slate-900 mb-4 flex items-center space-x-2 font-['Inter']">
+                <Calendar size={18} />
+                <span>Registration Details</span>
+              </h3>
+              
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-600 font-['Inter']">Registered:</span>
+                  <span className="font-medium text-slate-900 font-['Inter']">{formatDate(user.registeredAt)}</span>
+                </div>
+                
+                {user.organizationType && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600 font-['Inter']">Organization Type:</span>
+                    <span className="font-medium text-slate-900 font-['Inter']">{user.organizationType}</span>
+                  </div>
+                )}
+                
+                {user.teamSizeOrClients && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600 font-['Inter']">Team Size:</span>
+                    <span className="font-medium text-slate-900 font-['Inter']">{user.teamSizeOrClients}</span>
+                  </div>
+                )}
+                
+                {user.primaryRole && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-600 font-['Inter']">Primary Role:</span>
+                    <span className="font-medium text-slate-900 font-['Inter']">{user.primaryRole}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Business Information */}
+          {(user.mainChallenge || user.otherChallenge) && (
+            <div className="bg-slate-50 rounded-lg p-4">
+              <h3 className="font-semibold text-slate-900 mb-4 flex items-center space-x-2 font-['Inter']">
+                <Building size={18} />
+                <span>Business Information</span>
+              </h3>
+              
+              <div className="space-y-3">
+                {user.mainChallenge && (
+                  <div>
+                    <span className="text-slate-600 font-['Inter']">Main Challenge:</span>
+                    <p className="font-medium text-slate-900 mt-1 font-['Inter']">{user.mainChallenge}</p>
+                  </div>
+                )}
+                
+                {user.otherChallenge && (
+                  <div>
+                    <span className="text-slate-600 font-['Inter']">Additional Details:</span>
+                    <p className="font-medium text-slate-900 mt-1 font-['Inter']">{user.otherChallenge}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Rejection Reason */}
+          {user.status === 'rejected' && user.rejectionReason && (
+            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+              <h3 className="font-semibold text-red-900 mb-2 flex items-center space-x-2 font-['Inter']">
+                <AlertCircle size={18} />
+                <span>Rejection Reason</span>
+              </h3>
+              <p className="text-red-800 font-['Inter']">{user.rejectionReason}</p>
+            </div>
+          )}
+
+          {/* Action History */}
+          <div className="bg-slate-50 rounded-lg p-4">
+            <h3 className="font-semibold text-slate-900 mb-4 flex items-center space-x-2 font-['Inter']">
+              <FileText size={18} />
+              <span>Action History</span>
+            </h3>
+            
+            <div className="space-y-3">
+              {actionLogs.length > 0 ? (
+                actionLogs.map((log) => (
+                  <div key={log.id} className="flex items-start space-x-3 p-3 bg-white rounded border">
+                    <div className="w-2 h-2 bg-indigo-600 rounded-full mt-2"></div>
+                    <div className="flex-1">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-slate-900 font-['Inter']">{log.action}</span>
+                        <span className="text-sm text-slate-500 font-['Inter']">{formatDate(log.timestamp)}</span>
+                      </div>
+                      <p className="text-sm text-slate-600 font-['Inter']">
+                        by {log.adminName}
+                        {log.reason && ` • ${log.reason}`}
+                      </p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-500 text-center py-4 font-['Inter']">No actions recorded yet</p>
+              )}
+            </div>
+          </div>
+
+          {/* Quick Actions */}
+          <div className="flex items-center justify-center space-x-4 pt-4 border-t border-slate-200">
+            <button
+              onClick={() => window.location.href = `mailto:${user.email}`}
+              className="flex items-center space-x-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors font-['Inter']"
+            >
+              <Mail size={16} />
+              <span>Send Email</span>
+            </button>
+            
+            <button
+              onClick={() => setShowNotes(!showNotes)}
+              className="flex items-center space-x-2 px-4 py-2 border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors font-['Inter']"
+            >
+              <MessageSquare size={16} />
+              <span>Add Notes</span>
+            </button>
+          </div>
+
+          {/* Notes Section */}
+          {showNotes && (
+            <div className="bg-slate-50 rounded-lg p-4">
+              <h3 className="font-semibold text-slate-900 mb-3 font-['Inter']">Admin Notes</h3>
+              <textarea
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                placeholder="Add internal notes about this customer..."
+                className="w-full h-24 p-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-['Inter']"
+              />
+              <div className="flex space-x-2 mt-3">
+                <button className="px-3 py-1 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors font-['Inter']">
+                  Save Notes
+                </button>
+                <button 
+                  onClick={() => setShowNotes(false)}
+                  className="px-3 py-1 border border-slate-300 rounded hover:bg-slate-50 transition-colors font-['Inter']"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default UserDetailModal;

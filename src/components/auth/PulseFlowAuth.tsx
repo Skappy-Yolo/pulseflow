@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import ForgotPasswordPage from './ForgotPasswordPage';
+import ResetPasswordPage from './ResetPasswordPage';
 
 // TypeScript interfaces
 interface LoginFormData {
@@ -64,7 +66,7 @@ const isWorkEmail = (email: string): boolean => {
 };
 
 // Login Page Component - FIXED TEXT VISIBILITY & SPACING
-export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
+export const LoginPage = ({ onNavigateToSignup, onNavigateToForgotPassword }: LoginPageProps & { onNavigateToForgotPassword: () => void }) => {
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: ''
@@ -104,12 +106,6 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
       setErrors({ email: 'Please enter your email address' });
       return;
     }
-    
-    if (!isWorkEmail(formData.email)) {
-      setEmailError('Please use your work email address');
-      return;
-    }
-
     setIsLoading(true);
     try {
       const { error } = await supabase.auth.signInWithOtp({
@@ -118,7 +114,6 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
           emailRedirectTo: `${window.location.origin}/dashboard`
         }
       });
-      
       if (error) {
         if (error.message.includes('User not found') || error.message.includes('Invalid user')) {
           setErrors({ email: 'Account not found. Please contact support or register for access.' });
@@ -136,11 +131,7 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
     }
   };
 
-  // Add missing functions
-  const setCurrentPage = (page: string) => {
-    // Handle forgot password navigation - this would typically navigate to forgot password page
-    console.log('Navigate to:', page);
-  };
+  // Removed unused setCurrentPage; use onNavigateToForgotPassword prop instead
 
   const handleSocialLogin = (provider: string) => {
     setIsLoading(true);
@@ -204,7 +195,7 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
             <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img
                 src="/images/auth/hero-analytics.jpg"
-                alt="PulseFlow Analytics Dashboard"
+                alt="PulseFlow Login"
                 style={{ 
                   width: '100%', 
                   height: '100%', 
@@ -217,7 +208,6 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
               />
             </div>
           </div>
-
           {/* Right Side - Login Form */}
           <div style={{ 
             flex: '1', 
@@ -361,7 +351,7 @@ export const LoginPage = ({ onNavigateToSignup }: LoginPageProps) => {
                     </label>
                     <button
                       type="button"
-                      onClick={() => setCurrentPage('forgot-password')}
+                      onClick={onNavigateToForgotPassword}
                       style={{
                         fontSize: '16px',
                         color: '#2563eb',
@@ -1492,12 +1482,19 @@ export const SuccessPage = ({ onNavigateToLogin }: SuccessPageProps) => {
 
 // Main Authentication Flow Component - Clean Production Version
 const PulseFlowAuth = () => {
-  const [currentPage, setCurrentPage] = useState<'login' | 'register' | 'success'>('login');
+  const [currentPage, setCurrentPage] = useState<'login' | 'register' | 'success' | 'forgot-password' | 'reset-password'>('login');
+
+  React.useEffect(() => {
+    // Detect /reset-password in URL and show reset page
+    if (window.location.pathname.includes('reset-password')) {
+      setCurrentPage('reset-password');
+    }
+  }, []);
 
   const renderPage = () => {
     switch (currentPage) {
       case 'login':
-        return <LoginPage onNavigateToSignup={() => setCurrentPage('register')} />;
+        return <LoginPage onNavigateToSignup={() => setCurrentPage('register')} onNavigateToForgotPassword={() => setCurrentPage('forgot-password')} />;
       case 'register':
         return (
           <RegistrationPage 
@@ -1505,10 +1502,14 @@ const PulseFlowAuth = () => {
             onNavigateToSuccess={() => setCurrentPage('success')}
           />
         );
+      case 'forgot-password':
+        return <ForgotPasswordPage onNavigateToLogin={() => setCurrentPage('login')} />;
+      case 'reset-password':
+        return <ResetPasswordPage onNavigateToLogin={() => setCurrentPage('login')} />;
       case 'success':
         return <SuccessPage onNavigateToLogin={() => setCurrentPage('login')} />;
       default:
-        return <LoginPage onNavigateToSignup={() => setCurrentPage('register')} />;
+        return <LoginPage onNavigateToSignup={() => setCurrentPage('register')} onNavigateToForgotPassword={() => setCurrentPage('forgot-password')} />;
     }
   };
 

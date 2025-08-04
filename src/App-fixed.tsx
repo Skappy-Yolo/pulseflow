@@ -18,7 +18,10 @@ function App() {
               path="/login" 
               element={
                 <div className="auth-page">
-                  <LoginPage onNavigateToSignup={() => window.location.href = '/signup'} />
+                  <LoginPage 
+                    onNavigateToSignup={() => window.location.href = '/signup'} 
+                    onNavigateToForgotPassword={() => window.location.href = '/forgot-password'}
+                  />
                 </div>
               } 
             />

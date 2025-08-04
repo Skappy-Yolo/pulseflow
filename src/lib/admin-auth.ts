@@ -16,7 +16,7 @@ import type {
   AdminTableFilters,
   AdminPermissions
 } from '../types/admin';
-import { DEFAULT_ROLE_PERMISSIONS, PERMISSIONS } from '../types/admin';
+import { PERMISSIONS } from '../types/admin';
 
 // Admin session key - different from customer session
 const ADMIN_SESSION_KEY = 'pulse_admin_session';
@@ -64,6 +64,7 @@ export class AdminAuthService {
    */
   async loginAdmin(credentials: AdminLoginCredentials): Promise<AdminAuthResponse> {
     try {
+      console.log('🔍 Step 1: Attempting Supabase auth with:', credentials.email);
       // Step 1: Authenticate with Supabase Auth
       const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email: credentials.email,
@@ -71,18 +72,18 @@ export class AdminAuthService {
       });
 
       if (authError || !authData.user) {
-        await this.logAdminAction('login_failed', 'admin_user', credentials.email, {
-          reason: 'Invalid credentials',
-          email: credentials.email
-        });
-        
+        console.log('❌ Step 1 failed:', authError);
         return {
           success: false,
           error: 'Invalid email or password'
         };
       }
 
+      console.log('✅ Step 1 success: Supabase auth worked');
+      console.log('🔍 Auth user ID:', authData.user.id);
+
       // Step 2: Get admin user data from our admin_users table
+      console.log('🔍 Step 2: Looking up admin user in admin_users table...');
       const { data: adminData, error: queryError } = await supabase
         .from('admin_users')
         .select(`
@@ -98,73 +99,77 @@ export class AdminAuthService {
           last_login_at
         `)
         .eq('auth_user_id', authData.user.id)
-        .eq('is_active', true)
-        .single();
+        .eq('is_active', true);
 
-      if (queryError || !adminData) {
-        // User authenticated with Supabase but not in admin_users table
+      console.log('🔍 Admin query result:', { adminData, queryError });
+      console.log('🔍 Looking for auth_user_id:', authData.user.id);
+
+      if (queryError) {
+        console.log('❌ Database query error:', queryError);
         await supabase.auth.signOut();
-        
-        await this.logAdminAction('login_failed', 'admin_user', credentials.email, {
-          reason: 'User not authorized for admin access',
-          email: credentials.email
-        });
-        
+        return {
+          success: false,
+          error: 'Database error occurred'
+        };
+      }
+
+      if (!adminData || adminData.length === 0) {
+        console.log('❌ No admin record found for auth_user_id:', authData.user.id);
+        console.log('🔍 Let me check if the record exists with different criteria...');
+        // Additional check: look by email instead
+        const { data: emailCheck } = await supabase
+          .from('admin_users')
+          .select('*')
+          .eq('email', credentials.email);
+        console.log('🔍 Admin record by email:', emailCheck);
+        await supabase.auth.signOut();
         return {
           success: false,
           error: 'You do not have admin access to this system'
         };
       }
 
+      const adminRecord = adminData[0];
+      console.log('✅ Step 2 success: Found admin record:', adminRecord);
+
       // Step 3: Check if password reset is required
-      if (adminData.needs_password_reset) {
+      if (adminRecord.needs_password_reset) {
+        console.log('⚠️ Password reset required');
         return {
           success: false,
           error: 'Password reset required. Please contact your administrator.'
         };
       }
 
-      // Step 4: Create admin user object with permissions
+      // Step 4: Create admin user object
       const adminUser: AdminUser = {
-        id: adminData.id,
-        email: adminData.email,
-        firstName: adminData.first_name || '',
-        lastName: adminData.last_name || '',
+        id: adminRecord.id,
+        email: adminRecord.email,
+        firstName: adminRecord.first_name || '',
+        lastName: adminRecord.last_name || '',
         role: {
-          id: adminData.role,
-          name: adminData.role as any,
-          permissions: this.getPermissionsForRole(adminData.role)
+          id: adminRecord.role,
+          name: adminRecord.role as any,
+          permissions: this.getPermissionsForRole(adminRecord.role)
         },
-        isActive: adminData.is_active,
-        lastLoginAt: adminData.last_login_at,
-        createdAt: adminData.created_at
+        isActive: adminRecord.is_active,
+        lastLoginAt: adminRecord.last_login_at,
+        createdAt: adminRecord.created_at
       };
 
-      // Step 5: Update last login time
-      await supabase
-        .from('admin_users')
-        .update({ last_login_at: new Date().toISOString() })
-        .eq('id', adminData.id);
+      console.log('✅ Created admin user object:', adminUser);
 
-      // Step 6: Store admin session
+      // Store session
       const sessionExpiry = new Date();
       sessionExpiry.setHours(sessionExpiry.getHours() + 24);
-      
       const sessionData = {
         ...adminUser,
         sessionExpiry: sessionExpiry.toISOString()
       };
-
-      localStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify(sessionData));
-      localStorage.setItem(ADMIN_TOKEN_KEY, authData.session?.access_token || '');
-      
+      localStorage.setItem('pulse_admin_session', JSON.stringify(sessionData));
       this.currentAdmin = adminUser;
 
-      // Step 7: Log successful login
-      await this.logAdminAction('login_success', 'admin_user', adminUser.id, {
-        email: adminUser.email,
-        role: adminUser.role.name
-      });
+      console.log('✅ Login successful!');
 
       return {
         success: true,
@@ -173,7 +178,7 @@ export class AdminAuthService {
       };
 
     } catch (error) {
-      console.error('Admin login error:', error);
+      console.error('💥 Login error:', error);
       return {
         success: false,
         error: 'Login failed. Please try again.'
@@ -185,7 +190,17 @@ export class AdminAuthService {
    * Get current admin user
    */
   getCurrentAdmin(): AdminUser | null {
-    return this.currentAdmin;
+    try {
+      const storedSession = localStorage.getItem(ADMIN_SESSION_KEY);
+      if (!storedSession) return null;
+      const adminData = JSON.parse(storedSession);
+      if (adminData.isActive && new Date(adminData.sessionExpiry) > new Date()) {
+        return adminData;
+      }
+      return null;
+    } catch (error) {
+      return null;
+    }
   }
 
   /**
