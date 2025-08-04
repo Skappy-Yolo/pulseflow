@@ -7,7 +7,12 @@
 [[forms]]
   name = "pulseflow-contact"
 
-# SPA routing (already exists in _redirects, but adding here for completeness)
+# SPA routing - ensure admin routes work properly
+[[redirects]]
+  from = "/admin/*"
+  to = "/index.html"
+  status = 200
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

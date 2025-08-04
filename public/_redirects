@@ -1,10 +1,13 @@
 # Netlify redirects for React Router
 # This ensures all routes are handled by the React app
 
-# Redirect all routes to index.html for client-side routing
-/*    /index.html   200
+# Admin routes - ensure admin panel works properly
+/admin/*    /index.html   200
 
-# Optional: Redirect specific auth routes (if needed for analytics)
+# Redirect specific auth routes (if needed for analytics)
 /login    /index.html   200
 /signup   /index.html   200
 /success  /index.html   200
+
+# Catch-all: Redirect all other routes to index.html for client-side routing
+/*    /index.html   200
