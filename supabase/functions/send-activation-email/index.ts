@@ -5,9 +5,9 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts'
 
 const RESEND_API_KEY = Deno.env.get('RESEND_API_KEY')
-const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'noreply@pulseflow.app'
+const FROM_EMAIL = Deno.env.get('FROM_EMAIL') || 'noreply@noreply.pulseflowapp.com'
 const FROM_NAME = Deno.env.get('FROM_NAME') || 'PulseFlow by Nolum'
-const APP_URL = Deno.env.get('APP_URL') || 'https://pulseflow.netlify.app'
+const APP_URL = Deno.env.get('APP_URL') || 'https://pulseflowapp.com'
 
 
 interface EmailRequest {
@@ -57,7 +57,7 @@ serve(async (req: Request) => {
           <!-- Header -->
           <tr>
             <td style="padding: 40px 40px 30px; text-align: center; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); border-radius: 8px 8px 0 0;">
-              <img src="https://pulseflow.app/images/Heartbeat.svg" alt="PulseFlow" style="width: 50px; height: 50px; margin-bottom: 10px;">
+              <img src="https://pulseflowapp.com/images/Heartbeat.svg" alt="PulseFlow" style="width: 50px; height: 50px; margin-bottom: 10px;">
               <h1 style="color: #ffffff; margin: 0; font-size: 28px; font-weight: 600;">Welcome to PulseFlow!</h1>
             </td>
           </tr>
@@ -118,7 +118,7 @@ serve(async (req: Request) => {
           <tr>
             <td style="padding: 24px 40px; background-color: #f8fafc; border-radius: 0 0 8px 8px; border-top: 1px solid #e2e8f0;">
               <p style="color: #64748b; font-size: 12px; text-align: center; margin: 0 0 8px;">
-                Need help? Contact us at <a href="mailto:support@pulseflow.app" style="color: #2563eb;">support@pulseflow.app</a>
+                Need help? Contact us at <a href="mailto:support@pulseflowapp.com" style="color: #2563eb;">support@pulseflowapp.com</a>
               </p>
               <p style="color: #94a3b8; font-size: 11px; text-align: center; margin: 0;">
                 © ${new Date().getFullYear()} PulseFlow by Nolum. All rights reserved.
@@ -150,7 +150,7 @@ Please activate your account and set a new password as soon as possible.
 Click here to activate your account:
 ${activationUrl}
 
-Need help? Contact us at support@pulseflow.app
+Need help? Contact us at support@pulseflowapp.com
 
 © ${new Date().getFullYear()} PulseFlow by Nolum. All rights reserved.
 `

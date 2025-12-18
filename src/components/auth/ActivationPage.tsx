@@ -209,7 +209,7 @@ export const ActivationPage: React.FC<ActivationPageProps> = ({ onNavigateToLogi
           </button>
           
           <p style={{ marginTop: '24px', fontSize: '14px', color: '#6b7280' }}>
-            Need help? Contact <a href="mailto:support@pulseflow.app" style={{ color: '#2563eb' }}>support@pulseflow.app</a>
+            Need help? Contact <a href="mailto:support@pulseflowapp.com" style={{ color: '#2563eb' }}>support@pulseflowapp.com</a>
           </p>
         </div>
       </div>
@@ -350,7 +350,7 @@ export const ActivationPage: React.FC<ActivationPageProps> = ({ onNavigateToLogi
           </button>
           
           <p style={{ fontSize: '14px', color: '#6b7280' }}>
-            Need help? Contact <a href="mailto:support@pulseflow.app" style={{ color: '#2563eb' }}>support@pulseflow.app</a>
+            Need help? Contact <a href="mailto:support@pulseflowapp.com" style={{ color: '#2563eb' }}>support@pulseflowapp.com</a>
           </p>
         </div>
       </div>
