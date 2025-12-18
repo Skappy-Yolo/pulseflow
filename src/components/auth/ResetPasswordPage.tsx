@@ -43,7 +43,7 @@ const ResetPasswordPage: React.FC<{ onNavigateToLogin: () => void }> = ({ onNavi
             value={password}
             onChange={e => setPassword(e.target.value)}
             required
-            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', marginBottom: '16px', fontSize: '1rem' }}
+            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', marginBottom: '16px', fontSize: '1rem', color: '#1f2937', backgroundColor: '#ffffff', caretColor: '#1f2937' }}
             placeholder="Enter new password"
           />
           <label style={{ display: 'block', marginBottom: '8px', color: '#374151', fontWeight: 500 }}>Confirm Password</label>
@@ -52,7 +52,7 @@ const ResetPasswordPage: React.FC<{ onNavigateToLogin: () => void }> = ({ onNavi
             value={confirmPassword}
             onChange={e => setConfirmPassword(e.target.value)}
             required
-            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', marginBottom: '16px', fontSize: '1rem' }}
+            style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #d1d5db', marginBottom: '16px', fontSize: '1rem', color: '#1f2937', backgroundColor: '#ffffff', caretColor: '#1f2937' }}
             placeholder="Confirm new password"
           />
           <button
