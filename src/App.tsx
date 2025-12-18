@@ -6,6 +6,7 @@ import { ProtectedRoute } from './contexts/AuthContext';
 import LandingPage from './components/LandingPage';
 import { LoginPage, RegistrationPage, SuccessPage } from './components/auth/PulseFlowAuth';
 import StandaloneSuccessPage from './components/auth/StandaloneSuccessPage';
+import ActivationPage from './components/auth/ActivationPage';
 
 import AdminDashboard from './components/admin/dashboard/AdminDashboard';
 import { AdminLogin } from './components/admin/auth/AdminLogin';
@@ -13,7 +14,9 @@ import AdminLayout from './components/admin/Layout/AdminLayout';
 import AdminProtectedRoute from './components/admin/Layout/AdminProtectedRoute';
 import CustomerUserManagement from './components/admin/dashboard/CustomerUserManagement';
 import AdminUserManagement from './components/admin/dashboard/AdminUserManagement';
+import PendingApprovals from './components/admin/dashboard/PendingApprovals';
 import AdminComingSoon from './components/admin/ui/ComingSoon';
+import ConsultantRedirect from './components/consultant/ConsultantRedirect';
 
 // Wrapper components to handle navigation with React Router
 const LoginPageWrapper: React.FC = () => {
@@ -66,7 +69,7 @@ function App() {
               <Route path="billing" element={<AdminComingSoon title="Billing" />} />
               <Route path="settings" element={<AdminComingSoon title="Settings" />} />
               <Route path="analytics" element={<AdminComingSoon title="Analytics" />} />
-              <Route path="users/pending" element={<AdminComingSoon title="Pending Approvals" />} />
+              <Route path="users/pending" element={<PendingApprovals />} />
               <Route path="reports" element={<AdminComingSoon title="Reports Center" />} />
               <Route path="reports/users" element={<AdminComingSoon title="User Reports" />} />
               <Route path="reports/activity" element={<AdminComingSoon title="Activity Reports" />} />
@@ -77,6 +80,20 @@ function App() {
               {/* Default admin redirect */}
               <Route index element={<Navigate to="dashboard" replace />} />
             </Route>
+
+            {/* Consultant Dashboard Route - Redirects to Live Figma Site */}
+            <Route path="/consultant" element={
+              <ProtectedRoute>
+                <ConsultantRedirect />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/executive" element={
+              <div className="p-8">
+                <h1 className="text-2xl font-bold">Executive Dashboard</h1>
+                <p className="text-gray-600 mt-4">Executive-specific content goes here</p>
+              </div>
+            } />
 
             {/* Landing Page Route */}
             <Route path="/" element={<LandingPage />} />
@@ -94,6 +111,11 @@ function App() {
 
             {/* Standalone Success Page for Testing - Publicly accessible */}
             <Route path="/test-success" element={<StandaloneSuccessPage />} />
+
+            {/* Account Activation Route */}
+            <Route path="/activate" element={
+              <ActivationPage onNavigateToLogin={() => window.location.href = '/login'} />
+            } />
 
             {/* Redirect any unknown routes to landing page */}
             <Route path="*" element={<Navigate to="/" replace />} />

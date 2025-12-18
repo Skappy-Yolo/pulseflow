@@ -8,10 +8,11 @@ interface AuthState {
   hasCompletedSignup: boolean;
   userEmail: string | null;
   userInfo: any | null;
+  userType: 'consultant' | 'executive' | 'customer' | null;
 }
 
 interface AuthContextType extends AuthState {
-  login: (email: string) => void;
+  login: (email: string, userType?: 'consultant' | 'executive' | 'customer') => void;
   signup: (userData: any) => void;
   logout: () => void;
   completeSignup: () => void;
@@ -33,7 +34,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           isAuthenticated: false,
           hasCompletedSignup: false,
           userEmail: null,
-          userInfo: null
+          userInfo: null,
+          userType: null
         };
       }
     }
@@ -41,7 +43,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isAuthenticated: false,
       hasCompletedSignup: false,
       userEmail: null,
-      userInfo: null
+      userInfo: null,
+      userType: null
     };
   });
 
@@ -52,10 +55,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem('pulseflow_auth', JSON.stringify(updatedState));
   };
 
-  const login = (email: string) => {
+  const login = (email: string, userType: 'consultant' | 'executive' | 'customer' = 'customer') => {
     updateAuthState({
       isAuthenticated: true,
-      userEmail: email
+      userEmail: email,
+      userType: userType
     });
   };
 
@@ -73,7 +77,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       isAuthenticated: false,
       hasCompletedSignup: false,
       userEmail: null,
-      userInfo: null
+      userInfo: null,
+      userType: null
     });
     localStorage.removeItem('pulseflow_auth');
   };

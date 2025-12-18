@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, CheckCircle } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
+import { consultantAuth } from '../../lib/consultant-auth';
+import { customerRegistration } from '../../lib/customer-registration';
+import { useAuth } from '../../contexts/AuthContext';
 import ForgotPasswordPage from './ForgotPasswordPage';
 import ResetPasswordPage from './ResetPasswordPage';
 
@@ -67,6 +70,7 @@ const isWorkEmail = (email: string): boolean => {
 
 // Login Page Component - FIXED TEXT VISIBILITY & SPACING
 export const LoginPage = ({ onNavigateToSignup, onNavigateToForgotPassword }: LoginPageProps & { onNavigateToForgotPassword: () => void }) => {
+  const { login } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: ''
@@ -169,12 +173,39 @@ export const LoginPage = ({ onNavigateToSignup, onNavigateToForgotPassword }: Lo
     if (validateForm()) {
       setIsLoading(true);
       
-      // Simulate async login
-      setTimeout(() => {
-        console.log('✅ Login successful:', formData);
-        setIsLoading(false);
-        // Here you would typically call: login(formData.email);
-      }, 1000);
+      // Check if this is a consultant/executive login
+      if (consultantAuth.isConsultantEmail(formData.email)) {
+        // Handle consultant/executive authentication
+        const user = consultantAuth.authenticate({
+          email: formData.email,
+          password: formData.password
+        });
+        
+        if (user) {
+          console.log('✅ Consultant/Executive login successful:', user);
+          login(formData.email, user.type);
+          setIsLoading(false);
+          
+          // Redirect based on user type
+          if (user.type === 'consultant') {
+            window.location.href = '/consultant';
+          } else if (user.type === 'executive') {
+            window.location.href = '/executive';
+          }
+        } else {
+          console.log('❌ Invalid consultant/executive credentials');
+          setErrors({ password: 'Invalid email or password' });
+          setIsLoading(false);
+        }
+      } else {
+        // Handle regular customer authentication (existing logic)
+        setTimeout(() => {
+          console.log('✅ Customer login successful:', formData);
+          login(formData.email, 'customer');
+          setIsLoading(false);
+          // Customer users might redirect to a different dashboard or stay on current page
+        }, 1000);
+      }
     }
   };
 
@@ -653,23 +684,48 @@ export const RegistrationPage = ({ onNavigateToLogin, onNavigateToSuccess }: Reg
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (validateForm()) {
       setIsLoading(true);
       
-      const userData = { 
-        ...formData, 
-        userType,
-        registrationTimestamp: new Date().toISOString()
-      };
-      
-      // Simulate async registration
-      setTimeout(() => {
-        console.log('✅ Registration successful:', userData);
+      try {
+        // Submit to registration queue using new service
+        const result = await customerRegistration.submitRegistration({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          workEmail: formData.workEmail,
+          company: formData.company,
+          organizationType: formData.organizationType,
+          teamSizeOrClients: formData.teamSizeOrClients,
+          primaryRole: formData.primaryRole,
+          mainChallenge: formData.mainChallenge,
+          otherChallenge: formData.otherChallenge,
+          userType
+        });
+        
+        if (result.success) {
+          console.log('✅ Registration submitted:', result);
+          onNavigateToSuccess();
+        } else {
+          // Show error to user
+          console.error('❌ Registration failed:', result.error);
+          if (result.error === 'EMAIL_PENDING') {
+            setErrors({ workEmail: 'This email is already pending review. We\'ll be in touch soon!' });
+          } else if (result.error === 'EMAIL_APPROVED') {
+            setErrors({ workEmail: 'This email is already approved. Check your inbox for activation instructions.' });
+          } else if (result.error === 'EMAIL_EXISTS') {
+            setErrors({ workEmail: 'An account with this email already exists. Please login instead.' });
+          } else {
+            setErrors({ workEmail: result.message || 'Registration failed. Please try again.' });
+          }
+        }
+      } catch (error) {
+        console.error('Registration exception:', error);
+        setErrors({ workEmail: 'An error occurred. Please try again.' });
+      } finally {
         setIsLoading(false);
-        onNavigateToSuccess();
-      }, 1500);
+      }
     }
   };
 
