@@ -474,18 +474,18 @@ const PendingApprovals: React.FC = () => {
 
           {/* Status Filter */}
           <div className="relative">
-            <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <Filter size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 z-10" />
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="pl-9 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none cursor-pointer"
+              className="pl-9 pr-8 py-2.5 border border-gray-300 rounded-lg text-sm text-gray-900 bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 appearance-none cursor-pointer"
             >
-              <option value="all">All Statuses</option>
-              <option value="pending">Pending</option>
-              <option value="contacted">Contacted</option>
-              <option value="demo_scheduled">Demo Scheduled</option>
-              <option value="approved">Approved</option>
-              <option value="rejected">Rejected</option>
+              <option value="all" className="text-gray-900 bg-white">All Statuses</option>
+              <option value="pending" className="text-gray-900 bg-white">Pending</option>
+              <option value="contacted" className="text-gray-900 bg-white">Contacted</option>
+              <option value="demo_scheduled" className="text-gray-900 bg-white">Demo Scheduled</option>
+              <option value="approved" className="text-gray-900 bg-white">Approved</option>
+              <option value="rejected" className="text-gray-900 bg-white">Rejected</option>
             </select>
             <ChevronDown size={16} className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           </div>
