@@ -10,19 +10,51 @@ export interface ConsultantUser {
   email: string;
   type: 'consultant' | 'executive';
   name: string;
+  company: string;
+  dashboardRoute: string;
 }
 
-// Hardcoded consultant credentials (in production, this would be in a database)
-const CONSULTANT_USERS: Record<string, { password: string; type: 'consultant' | 'executive'; name: string }> = {
+// Demo accounts for Figma prototype dashboards
+// In production, this would be replaced with Supabase authentication
+const CONSULTANT_USERS: Record<string, { 
+  password: string; 
+  type: 'consultant' | 'executive'; 
+  name: string;
+  company: string;
+  dashboardRoute: string;
+}> = {
+  // Legacy demo accounts (can be removed later)
   'consultant@pulseflow.com': {
     password: 'consultant123',
     type: 'consultant',
-    name: 'Consultant User'
+    name: 'Consultant User',
+    company: 'PulseFlow',
+    dashboardRoute: '/consultant'
   },
   'executive@pulseflow.com': {
     password: 'executive123', 
     type: 'executive',
-    name: 'Executive User'
+    name: 'Executive User',
+    company: 'PulseFlow',
+    dashboardRoute: '/executive'
+  },
+  
+  // Nolum Consulting - Consuela (Consultant Dashboard Demo)
+  'consuela@nolum.com': {
+    password: 'consuela123',
+    type: 'consultant',
+    name: 'Consuela',
+    company: 'Nolum',
+    dashboardRoute: '/consultant'
+  },
+  
+  // ENIES - Delphine (Executive Dashboard Demo)
+  'delphine@enies.com': {
+    password: 'delphine123',
+    type: 'executive',
+    name: 'Delphine',
+    company: 'ENIES',
+    dashboardRoute: '/executive'
   }
 };
 
@@ -37,7 +69,9 @@ export class ConsultantAuthService {
       return {
         email: credentials.email,
         type: user.type,
-        name: user.name
+        name: user.name,
+        company: user.company,
+        dashboardRoute: user.dashboardRoute
       };
     }
     
@@ -57,6 +91,30 @@ export class ConsultantAuthService {
   static getUserType(email: string): 'consultant' | 'executive' | null {
     const user = CONSULTANT_USERS[email.toLowerCase()];
     return user ? user.type : null;
+  }
+
+  /**
+   * Get user's dashboard route
+   */
+  static getDashboardRoute(email: string): string {
+    const user = CONSULTANT_USERS[email.toLowerCase()];
+    return user ? user.dashboardRoute : '/';
+  }
+
+  /**
+   * Get full user info (without password)
+   */
+  static getUserInfo(email: string): Omit<ConsultantUser, 'email'> | null {
+    const user = CONSULTANT_USERS[email.toLowerCase()];
+    if (user) {
+      return {
+        type: user.type,
+        name: user.name,
+        company: user.company,
+        dashboardRoute: user.dashboardRoute
+      };
+    }
+    return null;
   }
 }
 
