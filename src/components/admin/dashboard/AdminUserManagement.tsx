@@ -80,8 +80,8 @@ export const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
           lastName: admin.lastName,
           role: {
             id: admin.role,
-            name: admin.role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
-            permissions: []
+            name: admin.role as 'super_admin' | 'admin' | 'viewer',
+            permissions: { users: [], admin: [], settings: [] }
           },
           isActive: admin.isActive,
           createdAt: admin.createdAt,
