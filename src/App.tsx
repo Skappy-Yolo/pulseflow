@@ -18,6 +18,8 @@ import PendingApprovals from './components/admin/dashboard/PendingApprovals';
 import AdminComingSoon from './components/admin/ui/ComingSoon';
 import ConsultantRedirect from './components/consultant/ConsultantRedirect';
 import ExecutiveRedirect from './components/executive/ExecutiveRedirect';
+import ForgotPasswordPage from './components/auth/ForgotPasswordPage';
+import ResetPasswordPage from './components/auth/ResetPasswordPage';
 
 // Wrapper components to handle navigation with React Router
 const LoginPageWrapper: React.FC = () => {
@@ -45,6 +47,16 @@ const RegistrationPageWrapper: React.FC = () => {
       onNavigateToSuccess={handleSuccessNavigation}
     />
   );
+};
+
+const ForgotPasswordPageWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  return <ForgotPasswordPage onNavigateToLogin={() => navigate("/login")} />;
+};
+
+const ResetPasswordPageWrapper: React.FC = () => {
+  const navigate = useNavigate();
+  return <ResetPasswordPage onNavigateToLogin={() => navigate("/login")} />;
 };
 
 function App() {
@@ -101,6 +113,8 @@ function App() {
             {/* Authentication Routes */}
             <Route path="/login" element={<LoginPageWrapper />} />
             <Route path="/signup" element={<RegistrationPageWrapper />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPageWrapper />} />
+            <Route path="/reset-password" element={<ResetPasswordPageWrapper />} />
 
             {/* Protected Success Page - Only accessible after signup */}
             <Route path="/success" element={
