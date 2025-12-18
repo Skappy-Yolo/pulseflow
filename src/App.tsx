@@ -10,6 +10,7 @@ import ActivationPage from './components/auth/ActivationPage';
 
 import AdminDashboard from './components/admin/dashboard/AdminDashboard';
 import { AdminLogin } from './components/admin/auth/AdminLogin';
+import { AdminResetPassword } from './components/admin/auth/AdminResetPassword';
 import AdminLayout from './components/admin/Layout/AdminLayout';
 import AdminProtectedRoute from './components/admin/Layout/AdminProtectedRoute';
 import CustomerUserManagement from './components/admin/dashboard/CustomerUserManagement';
@@ -67,6 +68,9 @@ function App() {
           <Routes>
             {/* Admin Login Route */}
             <Route path="/admin/login" element={<AdminLogin onLoginSuccess={() => {}} />} />
+            
+            {/* Admin Password Reset Route */}
+            <Route path="/admin/reset-password" element={<AdminResetPassword />} />
 
 
             {/* Admin Nested Layout Route */}
