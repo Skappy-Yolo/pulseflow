@@ -16,8 +16,10 @@ import {
   Eye
 } from 'lucide-react';
 import { adminAuth } from '../../../lib/admin-auth';
+import { adminInvitation } from '../../../lib/admin-invitation';
 import { PERMISSIONS } from '../../../types/admin';
 import type { AdminUser } from '../../../types/admin';
+import InviteAdminModal from './InviteAdminModal';
 
 interface AdminUserManagementProps {
   onAdminSelect?: (admin: AdminUser) => void;
@@ -37,6 +39,7 @@ export const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [showInviteForm, setShowInviteForm] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
   const [isInviting, setIsInviting] = useState(false);
   const [currentAdmin, setCurrentAdmin] = useState<AdminUser | null>(null);
   const [inviteForm, setInviteForm] = useState<InviteFormData>({
@@ -65,13 +68,41 @@ export const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
     try {
       setIsLoading(true);
       
-      const currentAdmin = adminAuth.getCurrentAdmin();
-      if (currentAdmin) {
-        setAdmins([currentAdmin]);
+      // Fetch all admins from the database
+      const result = await adminInvitation.getAdmins();
+      
+      if (result.success && result.admins) {
+        // Convert to AdminUser format
+        const adminUsers: AdminUser[] = result.admins.map(admin => ({
+          id: admin.id,
+          email: admin.email,
+          firstName: admin.firstName,
+          lastName: admin.lastName,
+          role: {
+            id: admin.role,
+            name: admin.role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()),
+            permissions: []
+          },
+          isActive: admin.isActive,
+          createdAt: admin.createdAt,
+          lastLoginAt: admin.lastLoginAt || undefined
+        }));
+        setAdmins(adminUsers);
+      } else {
+        // Fallback to current admin only
+        const currentAdmin = adminAuth.getCurrentAdmin();
+        if (currentAdmin) {
+          setAdmins([currentAdmin]);
+        }
       }
       
     } catch (error) {
       console.error('Error loading admins:', error);
+      // Fallback to current admin
+      const currentAdmin = adminAuth.getCurrentAdmin();
+      if (currentAdmin) {
+        setAdmins([currentAdmin]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -206,7 +237,7 @@ export const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
           
           {adminAuth.hasPermission(PERMISSIONS.ADMIN.CREATE) && (
             <button
-              onClick={() => setShowInviteForm(true)}
+              onClick={() => setShowInviteModal(true)}
               className="admin-btn-primary"
             >
               <Plus className="admin-icon-sm" />
@@ -216,7 +247,7 @@ export const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
         </div>
       </div>
 
-      {/* Invite Form Modal */}
+      {/* Invite Form Modal (Legacy - keeping for reference) */}
       {showInviteForm && (
         <div className="admin-modal-overlay">
           <div className="admin-modal-container">
@@ -484,6 +515,14 @@ export const AdminUserManagement: React.FC<AdminUserManagementProps> = ({
           )}
         </div>
       </div>
+
+      {/* Invite Admin Modal */}
+      <InviteAdminModal
+        isOpen={showInviteModal}
+        onClose={() => setShowInviteModal(false)}
+        invitedById={currentAdmin?.id || ''}
+        onSuccess={loadAdmins}
+      />
     </div>
   );
 };
