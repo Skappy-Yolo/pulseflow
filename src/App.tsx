@@ -17,6 +17,7 @@ import AdminUserManagement from './components/admin/dashboard/AdminUserManagemen
 import PendingApprovals from './components/admin/dashboard/PendingApprovals';
 import AdminComingSoon from './components/admin/ui/ComingSoon';
 import ConsultantRedirect from './components/consultant/ConsultantRedirect';
+import ExecutiveRedirect from './components/executive/ExecutiveRedirect';
 
 // Wrapper components to handle navigation with React Router
 const LoginPageWrapper: React.FC = () => {
@@ -89,10 +90,9 @@ function App() {
             } />
             
             <Route path="/executive" element={
-              <div className="p-8">
-                <h1 className="text-2xl font-bold">Executive Dashboard</h1>
-                <p className="text-gray-600 mt-4">Executive-specific content goes here</p>
-              </div>
+              <ProtectedRoute>
+                <ExecutiveRedirect />
+              </ProtectedRoute>
             } />
 
             {/* Landing Page Route */}

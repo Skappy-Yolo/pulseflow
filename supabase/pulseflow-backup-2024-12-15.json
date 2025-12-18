@@ -1,0 +1,125 @@
+[
+  {
+    "table_name": "admin_users",
+    "data": [
+      {
+        "id": "58b313ac-83d5-463a-8f56-6d1807df5a49",
+        "email": "emmanuel@critiview.com",
+        "first_name": "Emmanuel",
+        "last_name": "Okanlawon",
+        "role": "super_admin",
+        "is_active": true,
+        "invited_by": null,
+        "invitation_token": null,
+        "invitation_expires_at": null,
+        "last_login_at": null,
+        "created_at": "2025-07-27T19:34:18.743149+00:00",
+        "updated_at": "2025-07-27T19:34:18.743149+00:00",
+        "auth_user_id": null,
+        "needs_password_reset": false,
+        "invited_at": null
+      },
+      {
+        "id": "68a332d4-14e7-4ae7-a211-0075c07a0096",
+        "email": "emmanuel@pulseflow.com",
+        "first_name": "Emmanuel",
+        "last_name": "Okanlawon",
+        "role": "super_admin",
+        "is_active": true,
+        "invited_by": null,
+        "invitation_token": null,
+        "invitation_expires_at": null,
+        "last_login_at": null,
+        "created_at": "2025-07-27T21:07:28.656237+00:00",
+        "updated_at": "2025-07-27T21:07:28.656237+00:00",
+        "auth_user_id": "a002dc57-27b4-4fea-9ee6-19566cadc7b0",
+        "needs_password_reset": false,
+        "invited_at": null
+      }
+    ]
+  },
+  {
+    "table_name": "customer_users",
+    "data": [
+      {
+        "id": "52d467c0-5500-4c80-a947-de3ffe757d6e",
+        "auth_user_id": null,
+        "email": "demo.customer@example.com",
+        "first_name": "Demo",
+        "last_name": "Customer",
+        "company": "Example Corp",
+        "organization_type": "Company",
+        "team_size_or_clients": "10-50 employees",
+        "primary_role": "Product Manager",
+        "main_challenge": "Managing multiple product initiatives",
+        "other_challenge": null,
+        "status": "pending",
+        "approved_by": null,
+        "approved_at": null,
+        "rejection_reason": null,
+        "notes": null,
+        "created_at": "2025-07-25T19:34:18.743149+00:00",
+        "updated_at": "2025-07-27T19:34:18.743149+00:00",
+        "demo_date": null,
+        "assigned_to": null
+      },
+      {
+        "id": "72505278-fd95-46a7-83c6-53c2362f69a0",
+        "auth_user_id": null,
+        "email": "test.user@consultant.com",
+        "first_name": "Test",
+        "last_name": "Consultant",
+        "company": "Consulting Firm LLC",
+        "organization_type": "Consultant",
+        "team_size_or_clients": "5-10 clients",
+        "primary_role": "Senior Consultant",
+        "main_challenge": "Client data organization",
+        "other_challenge": null,
+        "status": "approved",
+        "approved_by": null,
+        "approved_at": null,
+        "rejection_reason": null,
+        "notes": null,
+        "created_at": "2025-07-22T19:34:18.743149+00:00",
+        "updated_at": "2025-07-27T19:34:18.743149+00:00",
+        "demo_date": null,
+        "assigned_to": null
+      }
+    ]
+  },
+  {
+    "table_name": "profiles",
+    "data": [
+      {
+        "id": "3d3f617d-a09e-44a7-996a-084fcf6c7fc0",
+        "email": "john.doe@col.com",
+        "first_name": "",
+        "last_name": "",
+        "company": "",
+        "organization_type": "",
+        "team_size_or_clients": "",
+        "primary_role": "",
+        "main_challenge": "",
+        "other_challenge": "",
+        "user_type": "executive",
+        "created_at": "2025-07-25T23:18:43.373851+00:00",
+        "updated_at": "2025-07-25T23:18:43.373851+00:00"
+      },
+      {
+        "id": "a002dc57-27b4-4fea-9ee6-19566cadc7b0",
+        "email": "emmanuel@pulseflow.com",
+        "first_name": "",
+        "last_name": "",
+        "company": "",
+        "organization_type": "",
+        "team_size_or_clients": "",
+        "primary_role": "",
+        "main_challenge": "",
+        "other_challenge": "",
+        "user_type": "executive",
+        "created_at": "2025-07-27T21:07:28.656237+00:00",
+        "updated_at": "2025-07-27T21:07:28.656237+00:00"
+      }
+    ]
+  }
+]

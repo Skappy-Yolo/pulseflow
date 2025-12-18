@@ -13,6 +13,14 @@ dist-ssr
 *.local
 .env.local
 
+# Sensitive files
+resend-api-key.txt
+*.key
+*.pem
+
+# Supabase temp files
+supabase/.temp/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
