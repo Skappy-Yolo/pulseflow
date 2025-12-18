@@ -82,10 +82,10 @@ export class AdminAuthService {
       console.log('✅ Step 1 success: Supabase auth worked');
       console.log('🔍 Auth user ID:', authData.user.id);
 
-      // Step 2: Get admin user data from our admin_users table
-      console.log('🔍 Step 2: Looking up admin user in admin_users table...');
+      // Step 2: Get admin user data from our pulseflow_admins table
+      console.log('🔍 Step 2: Looking up admin user in pulseflow_admins table...');
       const { data: adminData, error: queryError } = await supabase
-        .from('admin_users')
+        .from('pulseflow_admins')
         .select(`
           id,
           auth_user_id,
@@ -94,7 +94,6 @@ export class AdminAuthService {
           last_name,
           role,
           is_active,
-          needs_password_reset,
           created_at,
           last_login_at
         `)
@@ -118,7 +117,7 @@ export class AdminAuthService {
         console.log('🔍 Let me check if the record exists with different criteria...');
         // Additional check: look by email instead
         const { data: emailCheck } = await supabase
-          .from('admin_users')
+          .from('pulseflow_admins')
           .select('*')
           .eq('email', credentials.email);
         console.log('🔍 Admin record by email:', emailCheck);
@@ -132,16 +131,7 @@ export class AdminAuthService {
       const adminRecord = adminData[0];
       console.log('✅ Step 2 success: Found admin record:', adminRecord);
 
-      // Step 3: Check if password reset is required
-      if (adminRecord.needs_password_reset) {
-        console.log('⚠️ Password reset required');
-        return {
-          success: false,
-          error: 'Password reset required. Please contact your administrator.'
-        };
-      }
-
-      // Step 4: Create admin user object
+      // Step 3: Create admin user object
       const adminUser: AdminUser = {
         id: adminRecord.id,
         email: adminRecord.email,
