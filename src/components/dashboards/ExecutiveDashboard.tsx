@@ -1,11 +1,11 @@
 // Executive Dashboard - Standalone page for executive users
 // This wraps the Enhanced Dashboard executive view WITHOUT the consultant switcher
+// Now data-driven: fetches from Supabase OR shows demo data
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { 
   Home, 
   BarChart3,
-  Users,
   Link2,
   FileText,
   Menu,
@@ -15,8 +15,14 @@ import {
   TrendingUp,
   TrendingDown,
   AlertTriangle,
-  CheckCircle
+  CheckCircle,
+  Plus,
+  Building2,
+  Loader2,
+  LogOut
 } from 'lucide-react';
+import { dashboardService, type DashboardUser, type ExecutiveDepartment } from '../../lib/dashboard-service';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Sidebar component (NO consultant switch)
 interface SidebarProps {
@@ -28,11 +34,11 @@ interface SidebarProps {
   companyName: string;
 }
 
-const ExecutiveSidebar = ({ isOpen, onClose, currentPage, onPageChange, userName, companyName }: SidebarProps) => {
+const ExecutiveSidebar = ({ isOpen, onClose, currentPage, onPageChange, userName, companyName, onLogout }: SidebarProps & { onLogout: () => void }) => {
   const navItems = [
     { id: 'overview', label: 'Overview', icon: Home },
+    { id: 'departments', label: 'Departments', icon: Building2 },
     { id: 'integrations', label: 'Integrations', icon: Link2 },
-    { id: 'team', label: 'Department Heads', icon: Users },
     { id: 'analytics', label: 'Data Analytics', icon: BarChart3 },
     { id: 'reports', label: 'Reports', icon: FileText },
   ];
@@ -93,6 +99,17 @@ const ExecutiveSidebar = ({ isOpen, onClose, currentPage, onPageChange, userName
           );
         })}
       </nav>
+
+      {/* Logout Button */}
+      <div className="px-4 py-4 border-t border-gray-200 mt-auto">
+        <button
+          onClick={onLogout}
+          className="w-full flex items-center gap-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+        >
+          <LogOut className="h-5 w-5" />
+          <span className="font-medium">Sign Out</span>
+        </button>
+      </div>
     </div>
   );
 };
@@ -219,30 +236,133 @@ interface ExecutiveDashboardProps {
   userEmail?: string;
 }
 
+// Empty State Component for new executives
+const EmptyState = ({ 
+  icon: Icon, 
+  title, 
+  description, 
+  actionLabel, 
+  onAction 
+}: { 
+  icon: any; 
+  title: string; 
+  description: string; 
+  actionLabel?: string; 
+  onAction?: () => void; 
+}) => (
+  <div className="flex flex-col items-center justify-center py-12 px-6 text-center bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+    <div className="p-4 bg-gray-100 rounded-full mb-4">
+      <Icon className="h-8 w-8 text-gray-400" />
+    </div>
+    <h3 className="text-lg font-semibold text-gray-700 mb-2">{title}</h3>
+    <p className="text-sm text-gray-500 max-w-sm mb-4">{description}</p>
+    {actionLabel && onAction && (
+      <button
+        onClick={onAction}
+        className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
+      >
+        <Plus className="h-4 w-4" />
+        {actionLabel}
+      </button>
+    )}
+  </div>
+);
+
 export const ExecutiveDashboard = ({ userEmail }: ExecutiveDashboardProps) => {
+  const { logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState('overview');
+  const [isLoading, setIsLoading] = useState(true);
+  const [dbUser, setDbUser] = useState<DashboardUser | null>(null);
+  const [dbDepartments, setDbDepartments] = useState<ExecutiveDepartment[]>([]);
+  const [dbMetrics, setDbMetrics] = useState({
+    overallHealthScore: 0,
+    totalBudgetUsed: 0,
+    totalBudget: 0,
+    totalHeadcount: 0,
+    departmentsOnTrack: 0,
+    departmentsAtRisk: 0
+  });
+  const [useRealData, setUseRealData] = useState(false);
 
-  // Get user info based on email (demo data for now)
+  // Load data from Supabase on mount
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
+
+  const loadDashboardData = async () => {
+    setIsLoading(true);
+    try {
+      const currentUser = await dashboardService.getCurrentUser();
+      if (currentUser) {
+        setDbUser(currentUser);
+        const [departmentsData, metricsData] = await Promise.all([
+          dashboardService.getExecutiveDepartments(currentUser.organizationId),
+          dashboardService.getExecutiveMetrics(currentUser.organizationId)
+        ]);
+        setDbDepartments(departmentsData);
+        setDbMetrics(metricsData);
+        // Use real data if we have any departments from DB
+        setUseRealData(departmentsData.length > 0);
+      }
+    } catch (error) {
+      console.error('Error loading dashboard:', error);
+      setUseRealData(false);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      window.location.href = '/login';
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
+  // Get user info - prefer DB data, fall back to email-based demo data
   const getUserInfo = () => {
+    if (dbUser) {
+      return { name: dbUser.firstName || 'User', company: dbUser.organizationName };
+    }
     if (userEmail === 'delphine@enies.com') {
       return { name: 'Delphine', company: 'ENIES' };
     }
-    return { name: 'Executive', company: 'Company' };
+    if (userEmail === 'executive@pulseflow.com') {
+      return { name: 'Demo User', company: 'PulseFlow Demo' };
+    }
+    return { name: 'Executive', company: 'Your Company' };
   };
 
   const { name: userName, company: companyName } = getUserInfo();
 
-  // Demo metrics (hardcoded for ENIES)
-  const metrics: MetricCardProps[] = [
+  const hasNoDepartments = useRealData && dbDepartments.length === 0;
+
+  // Demo metrics (fallback when no real data - shows ENIES example)
+  const demoMetrics: MetricCardProps[] = [
     { icon: '📱', label: 'MARKETING', sublabel: '5.3%', value: '850 leads', valueColor: 'text-green-600', trend: 'up', trendText: '+12% this week' },
     { icon: '💼', label: 'SALES', sublabel: '26.7%', value: '227 opps', valueColor: 'text-red-600', trend: 'down', trendText: '-15% drop' },
     { icon: '⚡', label: 'PRODUCT', sublabel: '65%', value: '2,180 active', valueColor: 'text-green-600', trend: 'up', trendText: '+8% growth' },
     { icon: '🎯', label: 'CS HEALTH', sublabel: '92%', value: 'Excellent', valueColor: 'text-green-600', trend: 'stable', trendText: 'Stable' },
   ];
 
-  // Demo funnel data
-  const funnelStages: FunnelStageProps[] = [
+  // Convert DB departments to metrics display
+  const realMetrics: MetricCardProps[] = dbDepartments.slice(0, 4).map(dept => ({
+    icon: dept.departmentName === 'Marketing' ? '📱' : dept.departmentName === 'Sales' ? '💼' : dept.departmentName === 'Product' ? '⚡' : '🎯',
+    label: dept.departmentName.toUpperCase(),
+    sublabel: `${dept.healthScore}%`,
+    value: `${dept.headcount} people`,
+    valueColor: dept.healthScore >= 70 ? 'text-green-600' : dept.healthScore >= 40 ? 'text-yellow-600' : 'text-red-600',
+    trend: dept.status === 'on_track' || dept.status === 'ahead' ? 'up' : dept.status === 'at_risk' ? 'down' : 'stable',
+    trendText: dept.status.replace('_', ' ')
+  }));
+
+  const metrics = useRealData ? realMetrics : demoMetrics;
+
+  // Demo funnel data (fallback)
+  const demoFunnelStages: FunnelStageProps[] = [
     { label: 'Website Visitors', current: 12450, goal: 15000, color: '#3B82F6' },
     { label: 'Leads Generated', current: 850, goal: 1000, color: '#8B5CF6' },
     { label: 'Marketing Qualified', current: 425, goal: 500, color: '#EC4899' },
@@ -250,6 +370,20 @@ export const ExecutiveDashboard = ({ userEmail }: ExecutiveDashboardProps) => {
     { label: 'Opportunities', current: 89, goal: 120, color: '#10B981' },
     { label: 'Closed Won', current: 34, goal: 50, color: '#059669' },
   ];
+
+  const funnelStages = demoFunnelStages; // Always demo for now until integrations
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <Loader2 className="h-10 w-10 text-blue-600 animate-spin mx-auto mb-4" />
+          <p className="text-gray-500">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -269,6 +403,7 @@ export const ExecutiveDashboard = ({ userEmail }: ExecutiveDashboardProps) => {
         onPageChange={setCurrentPage}
         userName={userName}
         companyName={companyName}
+        onLogout={handleLogout}
       />
 
       {/* Main content */}
@@ -286,62 +421,166 @@ export const ExecutiveDashboard = ({ userEmail }: ExecutiveDashboardProps) => {
               <div className="mb-6">
                 <div className="flex items-center gap-3 mb-2">
                   <h1 className="text-4xl md:text-5xl font-semibold text-blue-600">{companyName}</h1>
+                  {!useRealData && (
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">Demo Data</span>
+                  )}
                 </div>
                 <div className="text-sm text-gray-500">
-                  <p>Last updated: 2 minutes ago</p>
-                  <p>Next sync: 3:45 PM</p>
+                  {useRealData ? (
+                    <p>Showing live data from your integrations</p>
+                  ) : (
+                    <p>Connect integrations to see your real data</p>
+                  )}
                 </div>
               </div>
 
-              {/* Critical Alert Banner */}
-              <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <p className="text-xl text-gray-600 mb-2">Product Lifecycle Health Overview</p>
-                    <div className="flex items-center gap-4 flex-wrap">
-                      <div className="text-6xl md:text-8xl font-semibold text-yellow-500">78%</div>
-                      <div className="flex items-center gap-2 text-red-600">
-                        <AlertTriangle className="h-6 w-6" />
-                        <p className="text-lg font-medium">2 Critical Issues Requiring Immediate Attention</p>
+              {hasNoDepartments ? (
+                /* Empty State for new executives */
+                <EmptyState
+                  icon={Building2}
+                  title="No departments configured"
+                  description="Add your company's departments to start tracking their health scores, KPIs, and performance metrics."
+                  actionLabel="Add Your First Department"
+                  onAction={() => setCurrentPage('departments')}
+                />
+              ) : (
+                <>
+                  {/* Critical Alert Banner */}
+                  <div className="bg-white border border-gray-200 rounded-xl p-6 mb-6 shadow-sm">
+                    <div className="flex items-center gap-4">
+                      <div className="flex-1">
+                        <p className="text-xl text-gray-600 mb-2">Product Lifecycle Health Overview</p>
+                        <div className="flex items-center gap-4 flex-wrap">
+                          <div className={`text-6xl md:text-8xl font-semibold ${
+                            useRealData 
+                              ? (dbMetrics.overallHealthScore >= 70 ? 'text-green-500' : dbMetrics.overallHealthScore >= 40 ? 'text-yellow-500' : 'text-red-500')
+                              : 'text-yellow-500'
+                          }`}>
+                            {useRealData ? `${dbMetrics.overallHealthScore}%` : '78%'}
+                          </div>
+                          {(useRealData ? dbMetrics.departmentsAtRisk > 0 : true) && (
+                            <div className="flex items-center gap-2 text-red-600">
+                              <AlertTriangle className="h-6 w-6" />
+                              <p className="text-lg font-medium">
+                                {useRealData 
+                                  ? `${dbMetrics.departmentsAtRisk} Department${dbMetrics.departmentsAtRisk !== 1 ? 's' : ''} Requiring Attention`
+                                  : '2 Critical Issues Requiring Immediate Attention'
+                                }
+                              </p>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
 
-              {/* Key Metrics Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
-                {metrics.map((metric, index) => (
-                  <MetricCard key={index} {...metric} />
-                ))}
-              </div>
+                  {/* Key Metrics Grid */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-6">
+                    {metrics.map((metric, index) => (
+                      <MetricCard key={index} {...metric} />
+                    ))}
+                  </div>
 
-              {/* Conversion Funnel */}
-              <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Monthly Conversion Funnel</h2>
-                {funnelStages.map((stage, index) => (
-                  <FunnelStage key={index} {...stage} />
-                ))}
-              </div>
+                  {/* Conversion Funnel */}
+                  <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm mb-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <h2 className="text-lg font-semibold text-gray-900">Monthly Conversion Funnel</h2>
+                      {!useRealData && (
+                        <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">Sample Data</span>
+                      )}
+                    </div>
+                    {funnelStages.map((stage, index) => (
+                      <FunnelStage key={index} {...stage} />
+                    ))}
+                  </div>
+                </>
+              )}
             </>
+          )}
+
+          {currentPage === 'departments' && (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <h1 className="text-2xl font-semibold text-gray-900">Departments</h1>
+                <button className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+                  <Plus className="h-4 w-4" />
+                  Add Department
+                </button>
+              </div>
+              {hasNoDepartments ? (
+                <EmptyState
+                  icon={Building2}
+                  title="No departments yet"
+                  description="Add your company's departments (Marketing, Sales, Product, etc.) to track their performance and health scores."
+                  actionLabel="Add Your First Department"
+                  onAction={() => console.log('Add department modal')}
+                />
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {dbDepartments.map((dept) => (
+                    <div key={dept.id} className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
+                      <h3 className="text-lg font-semibold text-gray-900 mb-2">{dept.departmentName}</h3>
+                      {dept.departmentHead && (
+                        <p className="text-sm text-gray-500 mb-4">Head: {dept.departmentHead}</p>
+                      )}
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-gray-500">Health Score</p>
+                          <p className={`text-2xl font-bold ${
+                            dept.healthScore >= 70 ? 'text-green-600' : dept.healthScore >= 40 ? 'text-yellow-600' : 'text-red-600'
+                          }`}>{dept.healthScore}%</p>
+                        </div>
+                        <div>
+                          <p className="text-sm text-gray-500">Headcount</p>
+                          <p className="text-xl font-semibold text-gray-900">{dept.headcount}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
 
           {currentPage === 'integrations' && (
             <div>
-              <h1 className="text-2xl font-semibold text-gray-900 mb-6">Integrations</h1>
-              <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-                <Link2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Integration management coming soon...</p>
+              <h1 className="text-2xl font-semibold text-gray-900 mb-2">Integrations</h1>
+              <p className="text-gray-600 mb-6">Connect your business tools to automatically sync data and metrics.</p>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {[
+                  { name: 'HubSpot', description: 'Marketing & CRM data', icon: '🎯', status: 'available' },
+                  { name: 'Salesforce', description: 'Sales pipeline', icon: '☁️', status: 'available' },
+                  { name: 'Jira', description: 'Product & engineering', icon: '📋', status: 'available' },
+                  { name: 'Intercom', description: 'Customer success', icon: '💬', status: 'coming' },
+                  { name: 'Google Analytics', description: 'Website traffic', icon: '📊', status: 'coming' },
+                  { name: 'Stripe', description: 'Revenue metrics', icon: '💳', status: 'coming' },
+                ].map(integration => (
+                  <div
+                    key={integration.name}
+                    className="bg-white p-5 rounded-xl shadow-sm border border-gray-200"
+                  >
+                    <div className="text-3xl mb-3">{integration.icon}</div>
+                    <h3 className="font-semibold text-gray-900 mb-1">{integration.name}</h3>
+                    <p className="text-sm text-gray-500 mb-4">{integration.description}</p>
+                    <button
+                      disabled={integration.status === 'coming'}
+                      className={`w-full py-2 rounded-lg text-sm font-medium ${
+                        integration.status === 'coming'
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                          : 'bg-blue-50 text-blue-600 hover:bg-blue-100'
+                      }`}
+                    >
+                      {integration.status === 'coming' ? 'Coming Soon' : 'Connect'}
+                    </button>
+                  </div>
+                ))}
               </div>
-            </div>
-          )}
 
-          {currentPage === 'team' && (
-            <div>
-              <h1 className="text-2xl font-semibold text-gray-900 mb-6">Department Heads</h1>
-              <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-                <Users className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Team management coming soon...</p>
+              <div className="mt-6 p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                <p className="text-sm text-amber-800">
+                  <strong>Note:</strong> Integration connections require your own API keys from each service.
+                </p>
               </div>
             </div>
           )}
@@ -349,20 +588,26 @@ export const ExecutiveDashboard = ({ userEmail }: ExecutiveDashboardProps) => {
           {currentPage === 'analytics' && (
             <div>
               <h1 className="text-2xl font-semibold text-gray-900 mb-6">Data Analytics</h1>
-              <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-                <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Analytics dashboard coming soon...</p>
-              </div>
+              <EmptyState
+                icon={BarChart3}
+                title="Analytics coming soon"
+                description="Connect your integrations first to unlock powerful analytics and insights about your business performance."
+                actionLabel="Connect Integrations"
+                onAction={() => setCurrentPage('integrations')}
+              />
             </div>
           )}
 
           {currentPage === 'reports' && (
             <div>
               <h1 className="text-2xl font-semibold text-gray-900 mb-6">Reports</h1>
-              <div className="bg-white border border-gray-200 rounded-xl p-8 text-center">
-                <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <p className="text-gray-600">Reports center coming soon...</p>
-              </div>
+              <EmptyState
+                icon={FileText}
+                title="Reports coming soon"
+                description="Generate comprehensive reports about your company's performance once you have data flowing from integrations."
+                actionLabel="Connect Integrations"
+                onAction={() => setCurrentPage('integrations')}
+              />
             </div>
           )}
         </main>
