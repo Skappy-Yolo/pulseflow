@@ -17,10 +17,12 @@ import CustomerUserManagement from './components/admin/dashboard/CustomerUserMan
 import AdminUserManagement from './components/admin/dashboard/AdminUserManagement';
 import PendingApprovals from './components/admin/dashboard/PendingApprovals';
 import AdminComingSoon from './components/admin/ui/ComingSoon';
-import ConsultantRedirect from './components/consultant/ConsultantRedirect';
-import ExecutiveRedirect from './components/executive/ExecutiveRedirect';
 import ForgotPasswordPage from './components/auth/ForgotPasswordPage';
 import ResetPasswordPage from './components/auth/ResetPasswordPage';
+
+// Figma Dashboard Pages (iframe embeds)
+import NolumDashboard from './pages/NolumDashboard';
+import EniesDashboard from './pages/EniesDashboard';
 
 // Wrapper components to handle navigation with React Router
 const LoginPageWrapper: React.FC = () => {
@@ -98,18 +100,23 @@ function App() {
               <Route index element={<Navigate to="dashboard" replace />} />
             </Route>
 
-            {/* Consultant Dashboard Route - Redirects to Live Figma Site */}
-            <Route path="/consultant" element={
+            {/* Nolum Dashboard (Consultant - Consuela) - Figma Embed */}
+            <Route path="/nolum/*" element={
               <ProtectedRoute>
-                <ConsultantRedirect />
+                <NolumDashboard />
               </ProtectedRoute>
             } />
-            
-            <Route path="/executive" element={
+
+            {/* Enies Dashboard (Executive - Delphine) - Figma Embed */}
+            <Route path="/enies/*" element={
               <ProtectedRoute>
-                <ExecutiveRedirect />
+                <EniesDashboard />
               </ProtectedRoute>
             } />
+
+            {/* Legacy routes - redirect to new paths */}
+            <Route path="/consultant/*" element={<Navigate to="/nolum" replace />} />
+            <Route path="/executive/*" element={<Navigate to="/enies" replace />} />
 
             {/* Landing Page Route */}
             <Route path="/" element={<LandingPage />} />

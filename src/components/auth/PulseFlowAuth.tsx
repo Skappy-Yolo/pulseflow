@@ -188,9 +188,9 @@ export const LoginPage = ({ onNavigateToSignup, onNavigateToForgotPassword }: Lo
           
           // Redirect based on user type
           if (user.type === 'consultant') {
-            window.location.href = '/consultant';
+            window.location.href = '/nolum';
           } else if (user.type === 'executive') {
-            window.location.href = '/executive';
+            window.location.href = '/enies';
           }
         } else {
           console.log('❌ Invalid consultant/executive credentials');
